@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "packages/**/*",
+    "type.d.ts"
+  ]
+}

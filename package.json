@@ -1,0 +1,32 @@
+{
+  "name": "map-service",
+  "author": "zhuyue",
+  "packageManager": "pnpm@9.10.0",
+  "type": "module",
+  "description": "openlayer map service，openlayer搭建的地图服务",
+  "license": "ISC",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "map2d": "pnpm --filter=@map-service/map2d dev",
+    "lint-staged": "lint-staged --quiet"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.18.0",
+    "chalk": "^2.0.1",
+    "core-js": "^3.38.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.29.1",
+    "husky": "^9.1.6",
+    "inquirer": "^8.2.6",
+    "inquirer-search-list": "^1.2.6",
+    "lint-staged": "^15.2.10",
+    "ora": "^1.2.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4",
+    "vue-eslint-parser": "^9.4.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
