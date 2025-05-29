@@ -1,0 +1,7 @@
+trailingComma: es5 # 使用es5中生效的尾随逗号
+bracketSpacing: true # 括号两边使用空格
+tabWidth: 2 # 每个缩进级别的空格数
+semi: true # 在语句末尾加上分号
+singleQuote: true # 使用单引号
+bracketSameLine: false # > 放在最后一行的末尾
+singleAttributePerLine: true # 在 HTML、Vue 和 JSX 中每行强制执行单个属性
