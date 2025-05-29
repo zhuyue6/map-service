@@ -5,11 +5,11 @@
 
 ## 地图架构
 
-![地图架构](/images/map-framework.png)
+![架构图](https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map-framework.png)
 
 ## 元素寻址
 
-![元素寻址](/images/element-address.png)
+![架构图](https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/element-address.png)
 
 
 - 基础模块

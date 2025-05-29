@@ -14,7 +14,7 @@
     const map = createMap({
       el: mapRef.value as HTMLElement,
       baseMap: {
-        url: 'images/map.jpg'
+        url: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map.jpg'
       }
     })
     // 创建图层

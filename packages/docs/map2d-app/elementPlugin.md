@@ -123,7 +123,7 @@ app中注入了元素的功能, 本插件是基础插件默认注入
     app.value = createApp({
       el: mapRef.value,
       baseMap: {
-        url: '/images/map.jpg'
+        url: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map.jpg'
       },
     })
   })

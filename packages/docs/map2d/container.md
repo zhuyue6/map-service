@@ -170,7 +170,7 @@ layerManage 创建图层， 图层创建元素
         }
       },
       image: {
-        src: '/images/position.png'
+        src: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/publichttps://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/position.png'
       },
       data: [6000, 6000]
     })
@@ -304,7 +304,7 @@ layerManage 创建图层， 图层创建元素
     const elementCircle = layer.create({
       type: 'image',
       image: {
-        src: '/images/position.png',
+        src: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/position.png',
       },
       data: [Math.random()* 10000, Math.random()* 10000],
     })
@@ -313,9 +313,6 @@ layerManage 创建图层， 图层创建元素
   onMounted(()=> {
     const map = createMap({
       el: mapRef.value,
-      baseMap: {
-        url: '/images/map.jpg'
-      }
     })
   
     layer = map.container.layerManager.create({
@@ -343,7 +340,7 @@ layerManage 创建图层， 图层创建元素
       type: 'image',
       rotate: 30,
       image: {
-        src: '/images/position.png',
+        src: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/publichttps://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/position.png',
         width: 60,
         height: 60
       },

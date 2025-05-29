@@ -297,9 +297,6 @@
   onMounted(()=> {
     map = createMap({
       el: mapRef.value,
-      baseMap: {
-        url: '/images/map.jpg'
-      }
     })
 
     const layer = map.container.layerManager.create()
@@ -320,7 +317,7 @@
       },
       rotate: 30,
       image: {
-        src: '/images/position.png'
+        src: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/position.png'
       },
       data: [6000, 6000]
     })

@@ -216,10 +216,7 @@ edit工具是整合了select/move/modify 提供元素编辑的能力，通过edi
 
   onMounted(()=>{
     const app = createApp({
-      el: mapRef.value,
-      baseMap: {
-        url: '/images/map.jpg'
-      },
+      el: mapRef.value
     })
     draw = app.tools.draw
     edit = app.tools.edit

@@ -9,7 +9,10 @@
 
   onMounted(()=> {
     const app = createApp({
-      el: mapRef.value
+      el: mapRef.value,
+      baseMap: {
+        url: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map.jpg'
+      }
     })
 
     app.element.create({

@@ -132,10 +132,7 @@
 
   onMounted(()=>{
     app = createApp({
-      el: mapRef.value,
-      baseMap: {
-        url: '/images/map.jpg'
-      },
+      el: mapRef.value
     })
     console.log(app.tools)
     draw = app.tools.draw
