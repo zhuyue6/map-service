@@ -6,6 +6,7 @@ import path from 'node:path'
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 export default defineConfig({
+  base: '/web-map-service',
   resolve: {
     alias: [
       {

@@ -25,6 +25,3 @@
 - 事件
   - 对视图、动画、容器、交换等过程对外暴露的回调函数等功能
   
-  
-  
-[相关的设计文档: http://confluence.zk.com:8090/pages/viewpage.action?pageId=86641176](http://confluence.zk.com:8090/pages/viewpage.action?pageId=86641176)
