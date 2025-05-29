@@ -1,27 +1,38 @@
-import OlMap from 'ol/Map'
 import OlSelect from 'ol/interaction/Select'
 import OlFeature from 'ol/Feature'
 import { click as OlClick } from 'ol/events/condition'
 import { getStyle } from '../style'
-import { InteractiveEvent } from './types'
-import { emitter } from '../events'
-import { type Container } from '../container'
-import { Element, getElementByOlFeature } from '../container/elements'
+import { Interactive } from './types'
+import { type InteractiveManager, getId } from './interactiveManager'
+import { getElementByOlFeature } from '../container/elements'
+import { Element } from '../container/elements/element'
+import { getElementOlStyle } from '../container/elements/common'
 
 const strokeColor = 'rgba(0, 0, 255, 0.7)'
 const strokeWidth = 2
 
-export type EventType = 'select' | keyof InteractiveEvent
+export type Emit = Element[]
 
-export function createSelectInteractive(olMap: OlMap, emitter: emitter.Emitter, container: Container): InteractiveEvent {
+export function createInteractive(interactiveManager: InteractiveManager): Interactive {
+  let interactive =  interactiveManager.getInteractiveByType('move')!
+  if (interactive) {
+    return interactive
+  }
+  const olMap = interactiveManager.getOlMap()
+  const emitter = interactiveManager.getEmitter()
+  const container = interactiveManager.getContainer()
   const olSelect: OlSelect = new OlSelect({
     condition: OlClick,
-    style: getStyle({
-      stroke: {
-        color: strokeColor,
-        width: strokeWidth
-      },
-    })
+    style(feature) {
+      const element = getElementByOlFeature(feature as OlFeature, container)
+      const style = getElementOlStyle(element!)
+      return [...style, getStyle({
+        stroke: {
+          color: strokeColor,
+          width: strokeWidth
+        },
+      })]
+    }
   });
   
   olSelect.on('select', function (e) {
@@ -34,15 +45,25 @@ export function createSelectInteractive(olMap: OlMap, emitter: emitter.Emitter, 
     emitter.emit('select', list)
   });
 
-  const interactiveEvent: InteractiveEvent = {
+  interactive = {
+    id: getId(),
+    type: 'select',
+    enabled: false,
     enable() {
+      if (interactive.enabled) return 
       olMap.addInteraction(olSelect);
-      emitter.emit('enable')
+      interactive.enabled = true
     },
     close() {
+      if (!interactive.enabled) return 
       olMap.removeInteraction(olSelect);
-      emitter.emit('close')
+      interactive.enabled = false
+    },
+    destroy() {
+      interactive.close()
+      olSelect.dispose()
     }
   }
-  return interactiveEvent
+  interactiveManager.add(interactive)
+  return interactive
 }

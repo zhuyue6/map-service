@@ -1,0 +1,20 @@
+{
+  "name": "web-map-service",
+  "author": "zhuyue",
+  "type": "module",
+  "description": "openlayer map service，openlayer搭建的地图服务",
+  "license": "ISC",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "require": "./dist/index.js",
+    "import": "./dist/index.esm.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ]
+}

@@ -1,44 +1,58 @@
 import OlMap from 'ol/Map';
-import { Vector as OlVectorSource} from 'ol/source';
+import { Vector as OlVectorSource } from 'ol/source';
 import { Vector as OlVectorLayer } from 'ol/layer';
-import OlFeature from 'ol/Feature'
-import { Polygon as OlPolygon, LineString as OlLineString } from 'ol/geom'
+import OlFeature from 'ol/Feature';
+import { Polygon as OlPolygon, LineString as OlLineString } from 'ol/geom';
 import OlDraw from 'ol/interaction/Draw';
 import { Style, Fill, Stroke, Circle } from 'ol/style';
-import OlOverlay from 'ol/Overlay'
-import {getArea, getLength} from 'ol/sphere';
-import { unByKey } from 'ol/Observable'
-import { EventsKey } from 'ol/events'
-import OlMapBrowserEvent from 'ol/MapBrowserEvent'
-import { emitter } from '../events'
-import { InteractiveEvent } from './types'
+import OlOverlay from 'ol/Overlay';
+import { getArea, getLength } from 'ol/sphere';
+import { unByKey } from 'ol/Observable';
+import { EventsKey } from 'ol/events';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
+import { type InteractiveManager, getId } from './interactiveManager'
+import { Interactive } from './types';
 
 function formatLength(line: OlLineString) {
-  const length = getLength(line);
+  const data = getLength(line);
   let output;
-  if (length > 100) {
-    output = Math.round((length / 1000) * 100) / 100 + ' ' + 'km';
+  if (data > 100) {
+    output = Math.round((data / 1000) * 100) / 100 + ' ' + 'km';
   } else {
-    output = Math.round(length * 100) / 100 + ' ' + 'm';
+    output = Math.round(data * 100) / 100 + ' ' + 'm';
   }
-  return { output, length };
+  return { output, data };
 }
 
 function formatArea(polygon: OlPolygon) {
-  const area = getArea(polygon);
+  const data = getArea(polygon);
   let output;
-  if (area > 10000) {
-    output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'km<sup>2</sup>';
+  if (data > 10000) {
+    output = Math.round((data / 1000000) * 100) / 100 + ' ' + 'km<sup>2</sup>';
   } else {
-    output = Math.round(area * 100) / 100 + ' ' + 'm<sup>2</sup>';
+    output = Math.round(data * 100) / 100 + ' ' + 'm<sup>2</sup>';
   }
-  return { output, area };
+  return { output, data };
 }
 
-function createMeasureTooltip(olMap: OlMap, tooltip: ToolTip) {
-  if (tooltip.el) {
-    tooltip.el.parentNode!.removeChild(tooltip.el);
-  }
+function removeTooltip(olMap: OlMap, tooltip: ToolTip) {
+  olMap.removeOverlay(tooltip.olOverlay!);
+  tooltip.el?.remove();
+}
+
+function removeMeasure(olMap: OlMap, measure: Measure) {
+  removeTooltip(olMap, measure.tooltip);
+}
+
+let id = 0;
+
+function createMeasure(olMap: OlMap, type: Measure['type']) {
+  id++;
+  const tooltip: ToolTip = {
+    message: '',
+    el: null,
+    olOverlay: null,
+  };
   tooltip.el = document.createElement('div');
   tooltip.el.className = 'ol-tooltip ol-tooltip-measure';
   const measureTooltip = new OlOverlay({
@@ -48,14 +62,24 @@ function createMeasureTooltip(olMap: OlMap, tooltip: ToolTip) {
     stopEvent: false,
     insertFirst: false,
   });
-  tooltip.olOverlay = measureTooltip
+  tooltip.olOverlay = measureTooltip;
   olMap.addOverlay(measureTooltip);
+  const measure: Measure = {
+    id,
+    type,
+    data: undefined,
+    tooltip,
+  };
+
+  return measure;
 }
 
-function createHelpTooltip(olMap: OlMap, tooltip: ToolTip) {
-  if (tooltip.el) {
-    tooltip.el.parentNode!.removeChild(tooltip.el);
-  }
+function createHelpTooltip(olMap: OlMap) {
+  const tooltip: ToolTip = {
+    message: '',
+    el: null,
+    olOverlay: null,
+  };
   tooltip.el = document.createElement('div');
   tooltip.el.className = 'ol-tooltip hidden';
   const helpTooltip = new OlOverlay({
@@ -63,14 +87,9 @@ function createHelpTooltip(olMap: OlMap, tooltip: ToolTip) {
     offset: [15, 0],
     positioning: 'center-left',
   });
-  tooltip.olOverlay = helpTooltip
+  tooltip.olOverlay = helpTooltip;
   olMap.addOverlay(helpTooltip);
-}
-
-interface ToolTip {
-  message: string
-  el: HTMLElement | null
-  olOverlay: OlOverlay | null
+  return tooltip;
 }
 
 const continuePolygonMsg = 'Click to continue drawing the polygon';
@@ -78,21 +97,68 @@ const continueLineMsg = 'Click to continue drawing the line';
 
 enum OlDrawType {
   distance = 'LineString',
-  area = 'Polygon'
+  area = 'Polygon',
+}
+
+interface ToolTip {
+  message: string;
+  el: HTMLElement | null;
+  olOverlay: OlOverlay | null;
 }
 
 interface Measure {
-  type: 'distance' | 'area'
-  length?: number
-  area?: number
+  id: number;
+  type: 'distance' | 'area';
+  data?: number;
+  tooltip: ToolTip;
 }
 
-export type EventType = 'measure' | keyof InteractiveEvent
+export type MeasureInteractive = Interactive<{
+  use(type: Measure['type']): void
+  clean(): void;
+}>
 
-export function createMeasureInteractive(olMap: OlMap, type: 'distance' | 'area', emitter: emitter.Emitter) {
-  const source = new OlVectorSource()
-  const vector = new OlVectorLayer({
-    source: source,
+function getDrawStyle() {
+  return new Style({
+    fill: new Fill({
+      color: 'rgba(255, 255, 255, 0.2)',
+    }),
+    stroke: new Stroke({
+      color: 'rgba(0, 0, 0, 0.5)',
+      lineDash: [10, 10],
+      width: 2,
+    }),
+    image: new Circle({
+      radius: 5,
+      stroke: new Stroke({
+        color: 'rgba(0, 0, 0, 0.7)',
+      }),
+      fill: new Fill({
+        color: 'rgba(255, 255, 255, 0.2)',
+      }),
+    }),
+  })
+}
+
+interface MeasureOptions {
+  type: Measure['type']
+}
+
+export type Emit = Measure
+
+export function createInteractive(
+  interactiveManager: InteractiveManager,
+  options?: MeasureOptions,
+) {
+  let interactive: MeasureInteractive =  interactiveManager.getInteractiveByType('measure') as MeasureInteractive
+  if (interactive) {
+    return interactive
+  }
+  const olMap = interactiveManager.getOlMap()
+  const emitter = interactiveManager.getEmitter()
+  const olSource = new OlVectorSource();
+  const olLayer = new OlVectorLayer({
+    source: olSource,
     style: {
       'fill-color': 'rgba(255, 255, 255, 0.2)',
       'stroke-color': '#ffcc33',
@@ -102,40 +168,13 @@ export function createMeasureInteractive(olMap: OlMap, type: 'distance' | 'area'
     },
   });
 
-
-  const olDraw = new OlDraw({
-    source: source,
-    type: OlDrawType[type],
-    style: new Style({
-      fill: new Fill({
-        color: 'rgba(255, 255, 255, 0.2)',
-      }),
-      stroke: new Stroke({
-        color: 'rgba(0, 0, 0, 0.5)',
-        lineDash: [10, 10],
-        width: 2,
-      }),
-      image: new Circle({
-        radius: 5,
-        stroke: new Stroke({
-          color: 'rgba(0, 0, 0, 0.7)',
-        }),
-        fill: new Fill({
-          color: 'rgba(255, 255, 255, 0.2)',
-        }),
-      }),
-    }),
-  });
-  let sketch: OlFeature | null
-  const helpTooltip: ToolTip = {
+  let type = options?.type ?? 'distance'
+  let olDraw: OlDraw 
+  let sketch: OlFeature | null;
+  let helpTooltip: ToolTip = {
     message: '',
     el: null,
-    olOverlay: null
-  };
-  const measureTooltip: ToolTip = {
-    message: '',
-    el: null,
-    olOverlay: null
+    olOverlay: null,
   };
 
   const pointerMoveHandler = function (evt: OlMapBrowserEvent) {
@@ -157,59 +196,99 @@ export function createMeasureInteractive(olMap: OlMap, type: 'distance' | 'area'
     helpTooltip.el?.classList.remove('hidden');
   };
 
-  const measure: Measure = {
-    type
-  }
-  
-  let listener: EventsKey;
-  createHelpTooltip(olMap, helpTooltip)
-  createMeasureTooltip(olMap, measureTooltip)
-  olDraw.on('drawstart', function (evt) {
-    sketch = evt.feature;
-    let tooltipCoord = evt.target.coordinate;
 
-    listener = sketch.getGeometry()!.on('change', function (evt) {
-      const geom = evt.target;
-      let output: string
-      let length: number
-      let area: number
-      if (type === 'distance') {
-        ({ output, length } = formatLength(geom));
-        tooltipCoord = geom.getLastCoordinate();
-      } else {
-        ({ output, area } = formatArea(geom));
-        tooltipCoord = geom.getInteriorPoint().getCoordinates();
-      }
-      
-      measure.length = length!
-      measure.area = area!
-
-      measureTooltip.el!.innerHTML = output;
-      measureTooltip.olOverlay!.setPosition(tooltipCoord);
+  function createDraw() {
+    olDraw = new OlDraw({
+      source: olSource,
+      type: OlDrawType[type],
+      style: getDrawStyle()
     });
-  });
+    olDraw.on('drawstart', function (evt) {
+      sketch = evt.feature;
+      let tooltipCoord = evt.target.coordinate;
+      measure = createMeasure(olMap, type);
+      listener = sketch.getGeometry()!.on('change', function (evt) {
+        const geom = evt.target;
+        let output: string;
+        let data: number;
+        if (type === 'distance') {
+          ({ output, data } = formatLength(geom));
+          tooltipCoord = geom.getLastCoordinate();
+        } else {
+          ({ output, data } = formatArea(geom));
+          tooltipCoord = geom.getInteriorPoint().getCoordinates();
+        }
+  
+        measure!.data = data;
+        measure!.tooltip.el!.innerHTML = output;
+        measure!.tooltip.olOverlay!.setPosition(tooltipCoord);
+      });
+    });
+  
+    olDraw.on('drawend', function () {
+      measure!.tooltip.el!.className = 'ol-tooltip ol-tooltip-static';
+      measure!.tooltip.olOverlay!.setOffset([0, -7]);
+      measures.push(measure!);
+      sketch = null;
+      unByKey(listener);
+      emitter.emit('measure', measure);
+    });
+  }
+  createDraw()
 
-  olDraw.on('drawend', function () {
-    measureTooltip.el!.className = 'ol-tooltip ol-tooltip-static';
-    measureTooltip.olOverlay!.setOffset([0, -7]);
-    sketch = null;
-    measureTooltip.el = null;
-    createMeasureTooltip(olMap, measureTooltip);
-    unByKey(listener);
-    emitter.emit('measure', measure)
-  });
-  return {
+  let measure: Measure | null = null;
+  // 所有测量的数字集合
+  let measures: Measure[] = [];
+  let listener: EventsKey;
+  
+  interactive = {
+    id: getId(),
+    type: 'measure',
+    enabled: false,
     enable() {
-      olMap.addLayer(vector)
-      olMap.addInteraction(olDraw)
+      if (interactive.enabled) return
+      helpTooltip = createHelpTooltip(olMap);
+      olMap.addLayer(olLayer);
+      olMap.addInteraction(olDraw);
       olMap.on('pointermove', pointerMoveHandler);
-      emitter.emit('enable')
+      interactive.enabled = true;
+    },
+    use(measureType: Measure['type']) {
+      interactive.clean()
+      helpTooltip = createHelpTooltip(olMap);
+      type = measureType
+      sketch = null;
+      olMap.removeInteraction(olDraw);
+      olDraw.dispose()
+      unByKey(listener);
+      createDraw()
+      if (interactive.enabled) {
+        olMap.addInteraction(olDraw);
+      }
+    },
+    clean() {
+      olSource.clear();
+      removeTooltip(olMap, helpTooltip);
+      for (const item of measures) {
+        removeMeasure(olMap, item);
+      }
+      measures = [];
     },
     close() {
-      olMap.removeLayer(vector)
-      olMap.removeInteraction(olDraw)
+      if (!interactive.enabled) return
+      interactive.clean();
+      olMap.removeLayer(olLayer);
+      olMap.removeInteraction(olDraw);
       olMap.un('pointermove', pointerMoveHandler);
-      emitter.emit('close')
+      interactive.enabled = false;
+    },
+    destroy() {
+      interactive.clean()
+      interactive.close()
+      olDraw.dispose()
     }
-  }
+  };
+
+  interactiveManager.add(interactive)
+  return interactive;
 }

@@ -1,13 +1,17 @@
 import { Layer as OlLayer } from 'ol/layer'
 import { default as OlVectorLayer } from 'ol/layer/Vector'
 import { default as OlVectorSource } from "ol/source/Vector"
-import { createElement, type ElementPluginsMap, Element } from './elements'
+import { Emitter } from '../events/emitter'
+import { createElement, type ElementData } from './elements'
+import { type ElementPluginsMap, type Element, type ElementType  } from './elements/element'
+import { type CircleData, type PointData, ElementExtend  } from './elements/types'
+export { type Element, type ElementType, type CircleData, type PointData, type ElementData }
 
 export interface Layer {
   id: number
   type?: string
   name?: string
-  create<T extends keyof ElementPluginsMap>(options: ElementPluginsMap[T]['options'] & {
+  create<T extends keyof ElementPluginsMap>(options: Omit<ElementPluginsMap[T]['options'], keyof ElementExtend> & {
     type: T
   }): ReturnType<typeof createElement<T>>
   add(element: Element): void
@@ -17,6 +21,7 @@ export interface Layer {
   getElementById(elementId: number): Element | undefined
   getOlLayer(): OlLayer
   getElements(): Element[]
+  [key: string]: unknown
 }
 
 let id: number = 0
@@ -30,7 +35,7 @@ export interface LayerOptions {
  * 图层负责元素创建、添加、移除、清空
  * 同时也能通过图层id来获取图层、getLayers获取当前全部图层
  */
-export function createLayer(options?: LayerOptions): Layer {
+export function createLayer(emitter: Emitter, options?: LayerOptions): Layer {
   const olVectorSource = new OlVectorSource()
   const olLayer = new OlVectorLayer({
     source: olVectorSource
@@ -46,7 +51,8 @@ export function createLayer(options?: LayerOptions): Layer {
       type: T
     }) {
       const element = createElement(options, id)
-      layer.add(element)
+      layer.add(element as Element)
+      emitter.emit('element:created', element)
       return element
     },
     add(element: Element | null) {
@@ -56,6 +62,7 @@ export function createLayer(options?: LayerOptions): Layer {
       const olFeature = element.getOlFeature()
       olVectorSource.addFeature(olFeature)
       elements.push(element)
+      emitter.emit('element:added', element)
     },
     remove(element: Element) {
       if (!element) return
@@ -64,10 +71,12 @@ export function createLayer(options?: LayerOptions): Layer {
       const olFeature = element.getOlFeature()
       olVectorSource.removeFeature(olFeature)
       elements.splice(elementMatcher, 1)
+      emitter.emit('element:removed', element)
     },
     clean() {
       olVectorSource.clear()
       elements = []
+      emitter.emit('element:clean', elements)
     },
     destroy() {
       layer.clean()

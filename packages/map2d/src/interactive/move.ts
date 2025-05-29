@@ -1,22 +1,29 @@
-import OlMap from 'ol/Map'
 import OlCollection from 'ol/Collection'
 import OlTranslate from 'ol/interaction/Translate'
 import OlFeature from 'ol/Feature'
-import { Element, syncFeatureElementData } from '../container/elements'
-import { InteractiveEvent } from './types'
-import { emitter } from '../events'
-import { type Container } from '../container'
+import { syncOlFeatureElementData } from '../container/elements'
+import { Element } from '../container/elements/element'
+import { Interactive } from './types'
+import { getId, InteractiveManager } from './interactiveManager'
 
 
-export interface ElementInteractiveEvent extends InteractiveEvent {
+export type MoveInteractive = Interactive<{
   add(element: Element): void
   remove(element: Element): void
   clean(): void
-}
+}> 
 
-export type EventType = 'move' | keyof ElementInteractiveEvent
+export type Emit = Element[]
 
-export function createMoveInteractive(olMap: OlMap, emitter: emitter.Emitter, container: Container): ElementInteractiveEvent {
+export function createInteractive(interactiveManager: InteractiveManager, useSync=true): MoveInteractive {
+  let interactive: MoveInteractive  =  interactiveManager.getInteractiveByType('move') as MoveInteractive
+  if (interactive) {
+    return interactive
+  }
+  const olMap = interactiveManager.getOlMap()
+  const emitter = interactiveManager.getEmitter()
+  const container = interactiveManager.getContainer()
+
   let list: Element[] = []
   const olCollection = new OlCollection<OlFeature>([])
   const olTranslate = new OlTranslate({
@@ -25,41 +32,53 @@ export function createMoveInteractive(olMap: OlMap, emitter: emitter.Emitter, co
 
   olTranslate.on('translateend', (evt) => {
     const translateList: OlFeature[]  = evt.features.getArray() ?? []
-    translateList.forEach((item) => {
-      syncFeatureElementData(item, container)
-    })
+
+    if (useSync) {
+      // 是否同步
+      translateList.forEach((item) => {
+        syncOlFeatureElementData(item, container)
+      })
+    }
     
     emitter.emit('move', list)
   });
 
-  const elementInteractive: ElementInteractiveEvent = {
+  interactive = {
+    id: getId(),
+    type: 'move',
+    enabled: false,
     add(element: Element) {
       const elementMatcher = list.findIndex((item) => item.id === element.id)
       if (elementMatcher !== -1) return 
       list.push(element)
       olCollection.push(element.getOlFeature())
-      emitter.emit('add', element)
     },
     remove(element: Element) {
       const elementMatcher = list.findIndex((item) => item.id === element.id)
       if (elementMatcher === -1) return 
       list.splice(elementMatcher, 1)
       olCollection.remove(element.getOlFeature())
-      emitter.emit('remove', element)
     },
     clean() {
       list = []
       olCollection.clear()
-      emitter.emit('clean')
     },
     enable() {
+      if (interactive.enabled) return 
       olMap.addInteraction(olTranslate);
-      emitter.emit('enable')
+      interactive.enabled = true
     },
     close() {
+      if (!interactive.enabled) return 
       olMap.removeInteraction(olTranslate);
-      emitter.emit('close')
+      interactive.enabled = false
+    },
+    destroy() {
+      interactive.clean()
+      interactive.close()
+      olTranslate.dispose()
     }
   }
-  return elementInteractive
+  interactiveManager.add(interactive)
+  return interactive
 }

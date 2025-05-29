@@ -1,21 +1,28 @@
-import OlMap from 'ol/Map'
 import OlCollection from 'ol/Collection'
 import OlFeature from 'ol/Feature'
-import { Element, syncFeatureElementData } from '../container/elements'
+import { syncOlFeatureElementData } from '../container/elements'
+import { Element } from '../container/elements/element'
 import OlModify from 'ol/interaction/Modify';
-import { InteractiveEvent } from './types'
-import { emitter } from '../events';
-import { Container } from '../container';
+import { Interactive } from './types'
+import { type InteractiveManager, getId} from './interactiveManager'
 
-export interface ModifyInteractiveEvent extends InteractiveEvent {
+export type ModifyInteractive = Interactive<{
   add(element: Element): void 
   remove(element: Element): void
   clean(): void
-}
+}>
 
-export type EventType = 'modify' | keyof ModifyInteractiveEvent
+export type Emit = Element[]
 
-export function createModifyInteractive(olMap: OlMap, emitter: emitter.Emitter, container: Container) {
+export function createInteractive(interactiveManager: InteractiveManager, useSync=true) {
+  let interactive: ModifyInteractive  =  interactiveManager.getInteractiveByType('modify') as ModifyInteractive
+  if (interactive) {
+    return interactive
+  }
+  const olMap = interactiveManager.getOlMap()
+  const emitter = interactiveManager.getEmitter()
+  const container = interactiveManager.getContainer()
+
   const olCollection = new OlCollection<OlFeature>([])
   const olModify = new OlModify({
     features: olCollection
@@ -25,38 +32,49 @@ export function createModifyInteractive(olMap: OlMap, emitter: emitter.Emitter, 
 
   olModify.on('modifyend', (evt) => {
     const olFeatureList: OlFeature[]  = evt.features.getArray() ?? []
-    olFeatureList.forEach((item) => {
-      syncFeatureElementData(item, container)
-    })
+    if (useSync) {
+      // 是否同步
+      olFeatureList.forEach((item) => {
+        syncOlFeatureElementData(item, container)
+      })
+    }
     emitter.emit('modify', list)
   });
 
-  const interactive: ModifyInteractiveEvent = {
+  interactive = {
+    id: getId(),
+    type: 'modify',
+    enabled: false,
     add(element: Element) {
       const elementMatcher = list.findIndex((item) => item.id === element.id)
       if (elementMatcher !== -1) return 
       list.push(element)
       olCollection.push(element.getOlFeature())
-      emitter.emit('add', element)
     },
     remove(element: Element) {
       const elementMatcher = list.findIndex((item) => item.id === element.id)
       if (elementMatcher === -1) return 
       list.splice(elementMatcher, 1)
       olCollection.remove(element.getOlFeature())
-      emitter.emit('remove', element)
     },
     clean() {
       list = []
       olCollection.clear()
     },
     enable() {
+      if (interactive.enabled) return 
       olMap.addInteraction(olModify);
-      emitter.emit('enable')
+      interactive.enabled = true
     },
     close() {
+      if (!interactive.enabled) return 
       olMap.removeInteraction(olModify);
-      emitter.emit('close')
+      interactive.enabled = false
+    },
+    destroy() {
+      interactive.clean()
+      interactive.close()
+      olModify.dispose()
     }
   }
   return interactive

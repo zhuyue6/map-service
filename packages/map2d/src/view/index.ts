@@ -29,7 +29,7 @@ export function getZoom(olView: OlView) {
 }
 
 export function setZoom(olView: OlView, zoom: number) {
-  olView.setMinZoom(zoom)
+  olView.setZoom(zoom)
 }
 
 export function setMinZoom(olView: OlView, zoom: number) {

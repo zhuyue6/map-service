@@ -1,11 +1,19 @@
 import OlCircle from 'ol/geom/Circle'
-import type { BaseElementOptions, CircleData } from './types'
+import OlFeature from 'ol/Feature'
+import type { ElementPluginOptions, CircleData } from './types'
+import { createElementCommon } from './common'
 
-export interface CirclePluginOptions extends BaseElementOptions<CircleData> {}
+export interface CirclePluginOptions extends ElementPluginOptions<CircleData> {}
 
-export function circlePlugin(options: CirclePluginOptions) {
+export function createElement(options: CirclePluginOptions) {
   const center = options.data?.center ?? []
   const radius  = options.data?.radius ?? 0
   const olCircle = new OlCircle(center, radius)
-  return olCircle
+  const olFeature = new OlFeature({ 
+    geometry: olCircle
+  })
+  const element = createElementCommon(olCircle, olFeature, options)
+  element.setStyle(options.style!)
+  element.setRotate(element.rotate)
+  return element
 }

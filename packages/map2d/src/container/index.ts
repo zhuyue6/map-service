@@ -1,16 +1,18 @@
 import OlMap from 'ol/Map'
-import { createBaseMap, BaseMap, type BaseMapOptions } from './baseMap'
-import { createLayerManager, LayerManager } from './layerManager'
-export  { BaseMapOptions }
+import { Emitter } from '../events/emitter'
+import { createBaseMap, type BaseMap, type BaseMapOptions } from './baseMap'
+import { createLayerManager, type LayerManager, type Layer, type Element, type ElementType, type PointData, type CircleData, type ElementData } from './layerManager'
+
+export  { type BaseMap, type BaseMapOptions, type LayerManager, type Layer, type Element, type ElementType, type PointData, type CircleData, type ElementData }
+export  { getElementData } from './elements'
 export interface Container {
   baseMap: BaseMap
   layerManager: LayerManager
 }
 
-export function createContainer(olMap: OlMap,  baseMapoptions?: BaseMapOptions): Container {
-  const baseMap = createBaseMap(baseMapoptions)
-  olMap.addLayer(baseMap.getOlLayer())
-  const layerManager = createLayerManager(olMap)
+export function createContainer(olMap: OlMap, emitter: Emitter, baseMapoptions?: BaseMapOptions): Container {
+  const baseMap = createBaseMap(olMap, baseMapoptions)
+  const layerManager = createLayerManager(olMap, emitter)
   const container: Container = {
     baseMap,
     layerManager

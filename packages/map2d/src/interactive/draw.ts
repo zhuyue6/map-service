@@ -1,13 +1,14 @@
-import OlMap from 'ol/Map'
 import OlVectorSource from 'ol/source/Vector';
 import { Vector as OlVectorLayer } from 'ol/layer';
 import OlDraw, { createBox as OlCreateBox, type GeometryFunction } from 'ol/interaction/Draw';
-import { InteractiveEvent } from './types'
-import { emitter } from '../events';
-import { getElementData, ElementType } from '../container/elements'
+import { Interactive } from './types'
+import { getElementData, ElementData } from '../container/elements'
+import { getId, InteractiveManager } from './interactiveManager'
+
+export type DrawType = 'line' | 'circle' | 'polygon' | 'rect'
 
 export interface DrawInteractiveOptions {
-  type: ElementType
+  type: DrawType
 }
 
 enum InteractiveType {
@@ -23,13 +24,22 @@ const geometryFunctionMap: {
   rect: OlCreateBox()
 }
 
-export type EventType = 'draw' | keyof DrawInteractiveEvent
-
-export interface DrawInteractiveEvent extends InteractiveEvent {
-  use(type: DrawInteractiveOptions['type']): void
+export interface Emit {
+  type: DrawType,
+  data: ElementData
 }
 
-export function createDrawInteractive(olMap: OlMap, emitter: emitter.Emitter, options?: DrawInteractiveOptions) {
+export type DrawInteractive = Interactive<{
+  use(type: DrawInteractiveOptions['type']): void
+}> 
+
+export function createInteractive(interactiveManager: InteractiveManager, options?: DrawInteractiveOptions) {
+  let interactive: DrawInteractive =  interactiveManager.getInteractiveByType('draw') as DrawInteractive
+  if (interactive) {
+    return interactive
+  }
+  const olMap = interactiveManager.getOlMap()
+  const emitter = interactiveManager.getEmitter()
   const olSource: OlVectorSource = new OlVectorSource()
   const olLayer: OlVectorLayer = new OlVectorLayer({
     source: olSource,
@@ -37,17 +47,17 @@ export function createDrawInteractive(olMap: OlMap, emitter: emitter.Emitter, op
   let olDraw: OlDraw
   let type = options?.type ?? 'line'
   const geometryFunction = options?.type ? geometryFunctionMap[options.type] : undefined
-  const drawType = InteractiveType[type]
 
-  function createDraw(drawType: `${InteractiveType}`, geometryFunction?: GeometryFunction) {
+  function createDraw(type: DrawInteractiveOptions['type'], geometryFunction?: GeometryFunction) {
     olDraw = new OlDraw({
       source: olSource,
-      type: drawType,
+      type: InteractiveType[type],
       geometryFunction
     })
     olDraw.on('drawend', (evt) => {
       const olGeometry = evt.feature.getGeometry()
       const drawData = getElementData(olGeometry!)
+      olSource.clear()
       emitter.emit('draw', {
         type,
         data: drawData
@@ -55,28 +65,42 @@ export function createDrawInteractive(olMap: OlMap, emitter: emitter.Emitter, op
     })
   }
 
-  createDraw(drawType, geometryFunction)
+  createDraw(type, geometryFunction)
 
-  const interactive: DrawInteractiveEvent = {
+  interactive = {
+    id: getId(),
+    type: 'draw',
+    enabled: false,
     use(useType: DrawInteractiveOptions['type']) {
       type = useType
       olMap.removeInteraction(olDraw);
-      const olDrawType = InteractiveType[type]
       const geometryFunction = geometryFunctionMap[type]
-      createDraw(olDrawType, geometryFunction)
-      olMap.addInteraction(olDraw);
+      createDraw(type, geometryFunction)
+      if (interactive.enabled) {
+        // 如果已经启用绘制则重新添加交互项
+        olMap.addInteraction(olDraw);
+      }
       emitter.emit('use')
     },
     enable() {
+      if (interactive.enabled) return 
       olMap.addLayer(olLayer)
       olMap.addInteraction(olDraw);
-      emitter.emit('enable')
+      interactive.enabled = true
     },
     close() {
+      if (!interactive.enabled) return 
       olMap.removeLayer(olLayer)
       olMap.removeInteraction(olDraw);
-      emitter.emit('close')
+      interactive.enabled = false
+    },
+    destroy() {
+      interactive.close()
+      olLayer.dispose()
+      olDraw.dispose()
     }
   }
+
+  interactiveManager.add(interactive)
   return interactive
 }

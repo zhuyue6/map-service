@@ -39,7 +39,7 @@ function getNpxByPlatform() {
 
 export async function startApp(app) {
   const cmd = getNpxByPlatform();
-  spawn(cmd, ['pnpm', '--filter', `@map-service/${app}`], {
+  spawn(cmd, ['pnpm', '--filter', `@web-map-service/${app}`, 'start'], {
     stdio: [0, 1, 2],
     shell: true,
   });
@@ -47,7 +47,7 @@ export async function startApp(app) {
 
 export async function buildApp(app) {
   const cmd = getNpxByPlatform();
-  spawn(cmd, ['pnpm', '--filter', `@map-service/${app}`], {
+  spawn(cmd, ['pnpm', '--filter', `@web-map-service/${app}`, 'build'], {
     stdio: [0, 1, 2],
     shell: true,
   });

@@ -1,10 +1,10 @@
 {
-  "name": "@map-service/map2d",
+  "name": "@web-map-service/map2d",
   "version": "0.0.1",
   "description": "2D地图服务",
   "main": "index.js",
   "scripts": {
-    "dev": "vite"
+    "start": "vite"
   },
   "type": "module",
   "author": "zhuyue",
