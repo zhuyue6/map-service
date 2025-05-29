@@ -8,7 +8,10 @@
     "jsxFactory": "React.createElement",
     "esModuleInterop": true,
     "allowJs": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@web-map-service/*": ["./packages/*/src"]
+    }
   },
   "exclude": [
     "node_modules"

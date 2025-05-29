@@ -1,14 +1,20 @@
 import inquirer from 'inquirer';
 import inquirerSearchList from 'inquirer-search-list';
 import { readdirSync } from 'node:fs';
-import { spawn } from 'node:child_process';
 import process from 'node:process';
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 inquirer.registerPrompt('search-list', inquirerSearchList);
 
 export function getApps() {
   const packageDirs = readdirSync('packages');
-  return packageDirs;
+  
+  return packageDirs.filter((app) => !['core', 'docs'].includes(app));
 }
 
 export function getArgv() {
@@ -27,28 +33,27 @@ export async function selectApp() {
       type: 'search-list',
       name: 'selected',
       message: 'select app?',
-      choices: ['all', ...packageDirs],
+      choices: [...packageDirs],
     },
   ]);
   return packages.selected;
 }
 
-function getNpxByPlatform() {
+export function getNpxByPlatform() {
   return process.platform === 'win32' ? 'npx.cmd' : 'npx';
 }
 
-export async function startApp(app) {
-  const cmd = getNpxByPlatform();
-  spawn(cmd, ['pnpm', '--filter', `@web-map-service/${app}`, 'start'], {
-    stdio: [0, 1, 2],
-    shell: true,
-  });
-}
-
-export async function buildApp(app) {
-  const cmd = getNpxByPlatform();
-  spawn(cmd, ['pnpm', '--filter', `@web-map-service/${app}`, 'build'], {
-    stdio: [0, 1, 2],
-    shell: true,
-  });
+export function getViteConfig(app) {
+  return {
+    configFile: path.resolve(__dirname, `../vite.config.ts`),
+    root: path.resolve(__dirname, `../packages/${app}`),
+    css: {
+      postcss: {
+        plugins: [
+          tailwindcss(),
+          autoprefixer()
+        ]
+      }
+    }
+  }
 }

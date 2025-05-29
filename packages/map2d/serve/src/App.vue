@@ -6,8 +6,7 @@
 
 <script lang="ts" setup>
   import { onMounted, ref } from 'vue'
-  import { createMap, createMeasureInteractive, createSelectInteractive, createModifyInteractive, createMoveInteractive, createDrawInteractive } from "../../src";
-  import { rotate } from 'ol/transform';
+  import { createMap } from "../../src";
 
   const mapRef = ref<HTMLElement>()
 
@@ -64,18 +63,5 @@
       },
       data: [6000, 6000]
     })
-
-    // const draw = createDrawInteractive(map.interactiveManager)
-    // draw.enable()
-    // draw.use('circle')
-    // draw.close()
-    // const measure = createMeasureInteractive(map.interactiveManager)
-    // measure.enable()
-    // const select = createSelectInteractive(map.interactiveManager)
-    // select.enable()
-    // const modify = createModifyInteractive(map.interactiveManager)
-    // modify.enable()
-    // const move = createMoveInteractive(map.interactiveManager)
-    // move.enable()
   })
 </script>

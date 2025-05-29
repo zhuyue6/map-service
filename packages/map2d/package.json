@@ -2,21 +2,16 @@
   "name": "@web-map-service/map2d",
   "version": "0.0.1",
   "description": "2D地图服务",
-  "main": "index.js",
-  "scripts": {
-    "start": "vite"
-  },
+  "main": "./dist/index.umd.js",
   "type": "module",
   "author": "zhuyue",
   "license": "ISC",
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.3",
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.3",
-    "sass": "1.79.0",
-    "tailwindcss": "^3.4.14",
-    "vite": "^6.3.5",
-    "vue": "^3.5.13"
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.js"
+    },
+    "./style.css": "./dist/index.css"
   },
   "dependencies": {
     "ol": "^10.5.0"

@@ -1,4 +1,4 @@
-import { emitter, pipe } from "@/events"
+import { emitter, pipe } from "../events"
 
 export interface Lifecycle{
   mounted(): void

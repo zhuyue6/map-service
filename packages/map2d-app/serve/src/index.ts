@@ -1,17 +1,12 @@
 import './styles/index.scss'
-import 'element-ui/lib/theme-chalk/index.css';
-import Vue from 'vue'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+import { createApp } from 'vue'
 import App from './App.vue'
-import ElementUI from 'element-ui'
 import router from './router'
 
-new Vue({
-  el: '#app',
-  components: {
-    App
-  },
-  router,
-  template: '<App/>'
-})
+const app = createApp(App)
+app.use(ElementPlus)
+app.use(router)
 
-Vue.use(ElementUI);
+app.mount('#app')

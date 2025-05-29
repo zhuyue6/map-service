@@ -11,9 +11,11 @@ const router: Router[] = [
       { text: '介绍', link: 'map2d-app/index' },
       { text: '插件注册', link: 'map2d-app/pluginRegister' },
       { text: '元素插件', link: 'map2d-app/elementPlugin' },
-      { text: '工具插件', link: 'map2d-app/toolPlugin'},
-      { text: '历史插件', link: 'map2d-app/tools/history' },
-      // { text: '元素插件', link: 'map2d-app/map' },
+      { text: '工具插件', link: 'map2d-app/toolPlugin', 
+        items: [
+          { text: '历史插件', link: 'map2d-app/tools/history' },
+        ],
+      },
     ],
   },
   {

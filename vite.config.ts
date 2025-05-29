@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import vuePlugin from '@vitejs/plugin-vue2'
+import vuePlugin from '@vitejs/plugin-vue'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
@@ -10,11 +10,7 @@ export default defineConfig({
     alias: [
       {
         find: /^@web-map-service\/(.*)$/,
-        replacement: path.resolve(__dirname, `../../packages/$1/src/index.ts`)
-      },  
-      {
-        find: /^vue$/,
-        replacement: 'vue/dist/vue.esm'
+        replacement: path.resolve(__dirname, `./packages/$1/src/index.ts`)
       }
     ]
   },
