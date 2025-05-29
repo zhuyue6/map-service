@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "web-map-service的前端文档库",
   "scripts": {
-    "start": "vitepress dev"
+    "start": "vitepress dev",
+    "build": "vitepress build"
   },
   "author": "zhuyue",
   "license": "ISC",

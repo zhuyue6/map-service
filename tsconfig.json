@@ -1,18 +1,5 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "strict": true,
-    "jsx": "preserve",
-    "jsxFactory": "React.createElement",
-    "esModuleInterop": true,
-    "allowJs": true,
-    "baseUrl": ".",
-    "paths": {
-      "@web-map-service/*": ["./packages/*/src"]
-    }
-  },
+  "extends": "./tsconfig.base.json",
   "include": [
     "apps/**/*",
     "packages/**/*",

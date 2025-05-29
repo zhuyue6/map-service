@@ -14,7 +14,7 @@ inquirer.registerPrompt('search-list', inquirerSearchList);
 export function getApps() {
   const packageDirs = readdirSync('packages');
   
-  return packageDirs.filter((app) => !['core', 'docs'].includes(app));
+  return packageDirs.filter((app) => !['docs'].includes(app));
 }
 
 export function getArgv() {
@@ -45,7 +45,7 @@ export function getNpxByPlatform() {
 
 export function getViteConfig(app) {
   return {
-    configFile: path.resolve(__dirname, `../vite.config.ts`),
+    configFile: app === 'core' ? false : path.resolve(__dirname, `../vite.config.ts`),
     root: path.resolve(__dirname, `../packages/${app}`),
     css: {
       postcss: {
@@ -54,6 +54,10 @@ export function getViteConfig(app) {
           autoprefixer()
         ]
       }
+    },
+    server: {
+      host: true,
+      port: 8080,
     }
   }
 }

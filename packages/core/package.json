@@ -2,6 +2,7 @@
   "name": "web-map-service",
   "author": "zhuyue",
   "type": "module",
+  "private": true,
   "description": "openlayer map service，openlayer搭建的地图服务",
   "license": "ISC",
   "exports": {
@@ -16,5 +17,8 @@
     "dist",
     "package.json",
     "README.md"
-  ]
+  ],
+  "dependencies": {
+    "@web-map-service/map2d": "^0.0.1"
+  }
 }
