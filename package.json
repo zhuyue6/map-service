@@ -6,6 +6,7 @@
   "description": "openlayer map service，openlayer搭建的地图服务",
   "license": "ISC",
   "scripts": {
+    "prepare": "husky install",
     "start": "node scripts/dev.js",
     "build": "node scripts/build.js",
     "map2d": "pnpm --filter=@web-map-service/map2d start",
