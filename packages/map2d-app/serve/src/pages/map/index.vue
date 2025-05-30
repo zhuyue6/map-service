@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
   import { ref, onMounted } from 'vue'
-  import { createApp } from '@web-map-service/map2d-app'
+  import { createApp } from '../../../../src/'
   const mapRef = ref()
 
   onMounted(()=> {

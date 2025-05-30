@@ -1,6 +1,31 @@
-### 架构设计
-详情请看  [2D编辑地图设计](http://192.168.18.161:8090/pages/viewpage.action?pageId=86641176)
+# 2D地图应用
 
-### 开发文档
+## 安装
 
-根目录执行 npm run docs 查看2D地图 api
+```js
+  npm i @web-map-service/map2d
+  npm i @web-map-service/map2d-app
+```
+
+### 如何使用
+
+```js
+  import { createApp } from '@web-map-service/map2d-app'
+  const app = createApp({
+    el: '#app',
+    baseMap: {
+      url: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map.jpg'
+    }
+  })
+
+  app.element.create({
+    type: 'ap',
+    data: {
+      center: [3000, 4000],
+      radius: 1000
+    }
+  })
+```
+
+
+[查看2D地图 api](http://zhuyue6.github.io/web-map-service/)

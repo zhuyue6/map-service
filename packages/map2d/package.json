@@ -1,8 +1,13 @@
 {
   "name": "@web-map-service/map2d",
   "version": "0.0.1",
-  "description": "2D地图服务",
+  "description": "基于openlayer的2D地图服务",
   "main": "./dist/index.umd.js",
+  "keywords": [
+    "map2d",
+    "openlayer",
+    "map-service"
+  ],
   "type": "module",
   "author": "zhuyue",
   "license": "ISC",
@@ -13,6 +18,9 @@
       "types": "./dist/index.d.ts"
     },
     "./style.css": "./dist/index.css"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "ol": "^10.5.0"

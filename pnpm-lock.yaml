@@ -106,10 +106,10 @@ importers:
         version: 10.5.0
 
   packages/map2d-app:
-    dependencies:
-      ol:
-        specifier: ^10.5.0
-        version: 10.5.0
+    devDependencies:
+      '@web-map-service/map2d':
+        specifier: ^0.0.1
+        version: 0.0.1
 
   packages/map3d:
     dependencies:
@@ -1035,6 +1035,9 @@ packages:
 
   '@vueuse/shared@9.13.0':
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
+
+  '@web-map-service/map2d@0.0.1':
+    resolution: {integrity: sha512-IUVE5d+XYWr5TVsY1fsK1AkNuKwbkyKKwwz4LoovUKpphbQJ9cNaHgOjRSLovHLkh50nw9LGTRsLwWuhjuOWcQ==}
 
   '@webgpu/types@0.1.60':
     resolution: {integrity: sha512-8B/tdfRFKdrnejqmvq95ogp8tf52oZ51p3f4QD5m5Paey/qlX4Rhhy5Y8tgFMi7Ms70HzcMMw3EQjH/jdhTwlA==}
@@ -3579,6 +3582,10 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
+
+  '@web-map-service/map2d@0.0.1':
+    dependencies:
+      ol: 10.5.0
 
   '@webgpu/types@0.1.60': {}
 

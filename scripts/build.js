@@ -19,6 +19,9 @@ async function buildApp(app) {
         entry: path.resolve(__dirname, `../packages/${app}/src/index.ts`),
         name: app,
         fileName: 'index'
+      },
+      rollupOptions: {
+        external: ['@web-map-service/map2d']
       }
     }
   })

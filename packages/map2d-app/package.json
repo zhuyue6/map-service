@@ -1,11 +1,17 @@
 {
   "name": "@web-map-service/map2d-app",
   "version": "0.0.1",
-  "description": "2D地图应用",
+  "description": "基于openlayer的2D地图应用",
   "scripts": {
     "start": "vite",
     "build": "vite build"
   },
+  "keywords": [
+    "map2d",
+    "openlayer",
+    "map-service",
+    "map-app"
+  ],
   "type": "module",
   "author": "zhuyue",
   "license": "ISC",
@@ -17,7 +23,7 @@
     },
     "./style.css": "./dist/index.css"
   },
-  "dependencies": {
-    "ol": "^10.5.0"
+  "peerDependencies": {
+    "@web-map-service/map2d": "^0.0.1"
   }
 }
