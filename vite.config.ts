@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import vuePlugin from '@vitejs/plugin-vue'
+import dts from 'vite-plugin-dts';
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
@@ -21,6 +22,13 @@ export default defineConfig({
     cors: true,
   },
   plugins: [
+    dts({
+      entryRoot: 'src',
+      include: ['src/**/*.ts', 'src/**/*.tsx'],
+      cleanVueFileName: true,
+      staticImport: true,
+      insertTypesEntry: false
+    }),
     vuePlugin(),
   ],
 })

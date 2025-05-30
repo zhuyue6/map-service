@@ -121,7 +121,7 @@ layerManage 创建图层， 图层创建服务元素
       type: 'image',
       rotate: 30,
       image: {
-        src: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/publichttps://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/position.png',
+        src: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/position.png',
         width: 60,
         height: 60
       },

@@ -59,7 +59,7 @@
       },
       rotate: 30,
       image: {
-        src: '/imgs/position.png'
+        src: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/position.png'
       },
       data: [6000, 6000]
     })

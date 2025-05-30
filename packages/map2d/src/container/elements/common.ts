@@ -2,7 +2,7 @@ import type { Coord, CircleData, PointData, ElementPluginOptions } from './types
 import { Geometry as OlGeometry, LineString as OlLineString, Polygon as OlPolygon, Circle as OlCircle, Point as OlPoint } from 'ol/geom'
 import OlFeature from 'ol/Feature'
 import { type Container, Element } from '../../container'
-import { getStyle, Style, setStyle } from '../../style'
+import { getStyle, type Style, setStyle } from '../../style'
 import OlStyle from 'ol/style/Style'
 import { getCenter } from 'ol/extent'
 

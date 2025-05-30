@@ -17,8 +17,5 @@
     "dist",
     "package.json",
     "README.md"
-  ],
-  "dependencies": {
-    "@web-map-service/map2d": "^0.0.1"
-  }
+  ]
 }

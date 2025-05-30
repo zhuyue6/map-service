@@ -9,11 +9,17 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.umd.js"
+      "require": "./dist/index.umd.js",
+      "types": "./dist/index.d.ts"
     },
     "./style.css": "./dist/index.css"
   },
   "dependencies": {
     "ol": "^10.5.0"
-  }
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ]
 }

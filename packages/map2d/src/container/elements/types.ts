@@ -1,4 +1,4 @@
-import { Style } from "../../style"
+import type { Style } from "../../style"
 import OlFeature from 'ol/Feature'
 
 export interface ElementImage {

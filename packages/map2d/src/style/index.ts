@@ -7,16 +7,16 @@ export const fillColor = 'rgba(255, 0, 0, 0.6)'
 export const imageWidth = 40
 export const imageHeight = 40
 
-interface StorkeStyle {
+export interface StorkeStyle {
   color: string,
   width: number
 }
 
-interface FillStyle {
+export interface FillStyle {
   color: string
 }
 
-interface ImageStyle {
+export interface ImageStyle {
   src: string
 }
 
