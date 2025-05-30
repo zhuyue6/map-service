@@ -1,6 +1,7 @@
 # move
 ```ts
-  import { createMoveInteractive, createSelectInteractive } from '@web-map-service/map2d'
+  import { map2d } from 'web-map-service'
+  const { createMoveInteractive, createSelectInteractive } = map2d
   const select = createSelectInteractive(map.interactiveManager)
   const move = createMoveInteractive(map.interactiveManager)
   // 启用移动
@@ -44,9 +45,9 @@
 </div>
 
 <script setup lang="ts">
-  import { createMap } from "@web-map-service/map2d";
+  import { createMap, map2d } from "web-map-service";
   import { ref, onMounted, reactive } from 'vue'
-  import { createSelectInteractive, createMoveInteractive } from '@web-map-service/map2d'
+  const { createSelectInteractive, createMoveInteractive } = map2d
 
   const state = reactive({
     move: false,

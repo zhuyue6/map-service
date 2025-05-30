@@ -48,7 +48,7 @@ add方法提供修改应用元素的能力，通过modify反射回调，通常�
 
 <script setup>
   import { ref, onMounted, reactive } from 'vue'
-  import { createApp } from '@web-map-service/map2d-app'
+  import { createApp } from 'web-map-service'
 
   const state = reactive({
     modify: false,

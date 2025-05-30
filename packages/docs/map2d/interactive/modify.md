@@ -1,7 +1,9 @@
 # modify
 提供修改服务元素能力，modify交互通常要配合select交互使用，选择的元素通过add方法添加为modify元素
 ```ts
-  import { createModifyInteractive, createSelectInteractive } from '@web-map-service/map2d'
+  import { map2d } from 'web-map-service'
+  const { createModifyInteractive, createSelectInteractive } = map2d
+  
   const select = createSelectInteractive(map.interactiveManager)
   const modify = createModifyInteractive(map.interactiveManager)
   // 启用选中
@@ -48,9 +50,9 @@
 </div>
 
 <script setup lang="ts">
-  import { createMap } from "@web-map-service/map2d";
+  import { createMap, map2d } from "web-map-service";
   import { ref, onMounted, reactive } from 'vue'
-  import { createSelectInteractive, createModifyInteractive } from '@web-map-service/map2d'
+  const { createSelectInteractive, createModifyInteractive } = map2d
 
   const state = reactive({
     modify: false,

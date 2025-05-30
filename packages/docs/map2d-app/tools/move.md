@@ -48,7 +48,7 @@ add方法提供移动应用元素的能力，通过move反射回调，通常是�
 
 <script setup>
   import { ref, onMounted, reactive } from 'vue'
-  import { createApp } from '@web-map-service/map2d-app'
+  import { createApp } from 'web-map-service'
 
   const state = reactive({
     move: false,

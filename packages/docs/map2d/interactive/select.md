@@ -2,7 +2,8 @@
 提供地图服务元素能力
 
 ```ts
-  import { createSelectInteractive } from '@web-map-service/map2d'
+  import { map2d } from 'web-map-service'
+  const { createSelectInteractive } = map2d
   const select = createSelectInteractive(map.interactiveManager)
   // 启用选中
   select.enable()
@@ -37,9 +38,9 @@
 </div>
 
 <script setup lang="ts">
-  import { createMap } from "@web-map-service/map2d";
+  import { createMap, map2d } from "web-map-service";
   import { ref, onMounted, reactive } from 'vue'
-  import { createMeasureInteractive, createSelectInteractive, createModifyInteractive, createMoveInteractive, createDrawInteractive } from '@web-map-service/map2d'
+  const { createSelectInteractive} = map2d
 
   const state = reactive({
     select: false,

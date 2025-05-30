@@ -9,7 +9,7 @@
 也可以在创建应用的时候直接参数plugins选择注册初始化插件
 
 ```js
-   import { createApp } from '@web-map-service/map2d-app'
+   import { createApp } from 'web-map-service'
    const app = createApp({
     plugins: [{
       type: 'ap'

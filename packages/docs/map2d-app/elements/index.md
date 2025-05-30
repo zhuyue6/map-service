@@ -6,7 +6,7 @@
 app中注入了应用元素的功能, 本插件是基础插件默认注入
 
 ```ts
-   import { createApp } from '@web-map-service/map2d-app'
+   import { createApp } from 'web-map-service'
    const app = createApp()
 
    const { element } = app
@@ -72,7 +72,7 @@ app中注入了应用元素的功能, 本插件是基础插件默认注入
 <div class="w-[500px] h-[500px] border-[1px] border-solid" ref="mapRef"></div>
 
 <script setup>
-  import { createApp } from '@web-map-service/map2d-app'
+  import { createApp } from 'web-map-service'
   import { onMounted, ref, reactive } from 'vue'
 
   const app = ref()

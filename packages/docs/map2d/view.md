@@ -64,7 +64,7 @@
 </div>
 
 <script setup lang="ts">
-  import { createMap } from "@web-map-service/map2d";
+  import { createMap } from "web-map-service";
   import { ref, onMounted, reactive } from 'vue'
 
   const state = reactive({

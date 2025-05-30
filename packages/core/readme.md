@@ -25,9 +25,9 @@
 ## 创建一个地图服务
 
 ```js
-  import '@web-map-service/map2d/style.css'
-  import { map2d } from 'web-map-service'
-  const map = map2d.createMap({
+  import 'web-map-service/style.css'
+  import { createMap } from 'web-map-service'
+  const map = createMap({
     el: 'app',
     baseMap: {
       url: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map.jpg'
@@ -49,10 +49,10 @@
 ## 创建一个地图应用
 
 ```js
-  import '@web-map-service/map2d/style.css'
-  import { map2dApp } from 'web-map-service'
+  import 'web-map-servicestyle.css'
+  import { createApp } from 'web-map-service'
   
-  const app = map2dApp.createApp({
+  const app = createApp({
     el: 'app',
     baseMap: {
       url: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map.jpg'

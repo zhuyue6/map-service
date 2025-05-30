@@ -2,7 +2,7 @@
 
 ## 创建地图  
 ```js
-  import { createMap } from '@web-map-service/map2d'
+  import { createMap } from 'web-map-service'
   const map = createMap({
     el: 'map',
     baseMap: {
@@ -17,7 +17,7 @@
 </div>
 
 <script setup lang="ts">
-  import { createMap } from "@web-map-service/map2d";
+  import { createMap } from "web-map-service";
   import { ref, onMounted } from 'vue'
 
   const mapRef = ref<HTMLElement>()

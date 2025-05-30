@@ -29,7 +29,7 @@ edit是整合了select/move/modify 提供应用元素编辑的能力，通过edi
 <div class="w-[500px] h-[700px]">
   <div class="flex w-full flex-col">
     <div class="flex mb-2">
-      <el-button class="mr-2"  @click="switcher('edit', !state.edit)" type="primary">{{ `${state.edit ? '关闭': '启用'} edits插件`}}</el-button>
+      <el-button class="mr-2"  @click="switcher('edit', !state.edit)" type="primary">{{ `${state.edit ? '关闭': '启用'} edit插件`}}</el-button>
     </div>
   </div>
   <div class="w-[500px] h-[500px] border" ref="mapRef"></div>
@@ -37,7 +37,7 @@ edit是整合了select/move/modify 提供应用元素编辑的能力，通过edi
 
 <script setup>
   import { ref, onMounted, reactive } from 'vue'
-  import { createApp } from '@web-map-service/map2d-app'
+  import { createApp } from 'web-map-service'
 
   const state = reactive({
     edit: false,

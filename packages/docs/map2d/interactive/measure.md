@@ -2,7 +2,8 @@
 measure 提供测绘能力，包括测面积和测距离，通过measure反射回调
 
 ```ts
-  import { createMeasureInteractive } from '@web-map-service/map2d'
+  import { map2d } from 'web-map-service'
+  const { createMeasureInteractive } = map2d
   const measure = createMeasureInteractive(map.interactiveManager)
   // 启用测面积
   measure.enable()
@@ -51,9 +52,9 @@ measure 提供测绘能力，包括测面积和测距离，通过measure反射�
 </div>
 
 <script setup lang="ts">
-  import { createMap } from "@web-map-service/map2d";
+  import { createMap, map2d } from "web-map-service";
   import { ref, onMounted, reactive } from 'vue'
-  import { createMeasureInteractive, createSelectInteractive, createModifyInteractive, createMoveInteractive, createDrawInteractive } from '@web-map-service/map2d'
+  const { createMeasureInteractive, createSelectInteractive, createModifyInteractive, createMoveInteractive, createDrawInteractive } = map2d
 
   const state = reactive({
     measure: false,

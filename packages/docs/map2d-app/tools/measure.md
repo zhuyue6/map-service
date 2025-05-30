@@ -47,7 +47,7 @@
 
 <script setup>
   import { ref, onMounted, reactive } from 'vue'
-  import { createApp } from '@web-map-service/map2d-app'
+  import { createApp } from 'web-map-service'
 
   const state = reactive({
     measure: false,

@@ -5,7 +5,7 @@ import { createMap } from '@web-map-service/map2d'
 
 export { 
   createMap,
-  createApp,
+  createApp
 }
 
 export * as map2d from '@web-map-service/map2d'

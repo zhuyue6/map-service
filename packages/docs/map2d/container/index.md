@@ -28,7 +28,7 @@ layerManage 创建图层， 图层创建服务元素
 </div>
 
 <script setup lang="ts">
-  import { createMap } from "@web-map-service/map2d";
+  import { createMap } from "web-map-service";
   import { ref, onMounted, reactive } from 'vue'
 
   const mapRef = ref<HTMLElement>()

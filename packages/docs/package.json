@@ -11,12 +11,11 @@
   "type": "module",
   "devDependencies": {
     "autoprefixer": "^10.4.21",
-    "vitepress": "^1.5.0"
+    "vitepress": "^1.6.3"
   },
   "dependencies": {
-    "@web-map-service/map2d": "^0.1.0",
-    "@web-map-service/map2d-app": "^0.1.0",
-    "element-plus": "^2.9.9",
-    "vue": "^3.5.16"
+    "element-plus": "^2.9.11",
+    "vue": "^3.5.16",
+    "web-map-service": "^0.1.3"
   }
 }
