@@ -11,7 +11,7 @@
 ```js
   import { createMap } from '@web-map-service/map2d'
   const map = createMap({
-    el: '#app',
+    el: 'app',
     baseMap: {
       url: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map.jpg'
     }

@@ -2,5 +2,6 @@ node_modules/
 dist/
 .cache/
 cache/
+docs/
 
 !packages/docs/dist/

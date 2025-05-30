@@ -1,3 +1,6 @@
-export { createApp } from './app'
+export * from './app'
 export * as tools from './tools'
 export * as elements from './elements'
+export type { App, Plugin, PluginOptions } from './types'
+export * from './elements/types'
+export * from './elements/types'

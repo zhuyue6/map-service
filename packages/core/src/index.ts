@@ -1,18 +1,12 @@
-import './styles/index.scss'
 import '@web-map-service/map2d/style.css'
+
 import { createApp } from '@web-map-service/map2d-app'
+import { createMap } from '@web-map-service/map2d'
 
-const app = createApp({
-  el: '#app',
-  baseMap: {
-    url: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map.jpg'
-  }
-})
+export { 
+  createMap,
+  createApp,
+}
 
-app.element.create({
-  type: 'ap',
-  data: {
-    center: [3000, 4000],
-    radius: 1000
-  }
-})
+export * as map2d from '@web-map-service/map2d'
+export * as map2dApp from '@web-map-service/map2d-app'

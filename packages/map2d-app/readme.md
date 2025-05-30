@@ -13,7 +13,7 @@
   import '@web-map-service/map2d/style.css'
   import { createApp } from '@web-map-service/map2d-app'
   const app = createApp({
-    el: '#app',
+    el: 'app',
     baseMap: {
       url: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map.jpg'
     }

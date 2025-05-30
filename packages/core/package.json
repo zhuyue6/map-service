@@ -2,10 +2,11 @@
   "name": "web-map-service",
   "author": "zhuyue",
   "type": "module",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.1",
   "description": "openlayer map service/app，openlayer搭建的地图服务",
   "license": "ISC",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.umd.js",
   "exports": {
     "types": "./dist/index.d.ts",
     "require": "./dist/index.js",
@@ -14,13 +15,16 @@
   "engines": {
     "node": ">=18"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "package.json",
     "README.md"
   ],
   "dependencies": {
-    "@web-map-service/map2d": "^0.1.0",
-    "@web-map-service/map2d-app": "^0.1.0"
+    "@web-map-service/map2d": "^0.1.1",
+    "@web-map-service/map2d-app": "^0.1.1"
   }
 }

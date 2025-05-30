@@ -3,7 +3,7 @@ import { type App, type Plugin, type PluginOptions } from './types'
 import { register, dependPluginRegister } from './setup/plugin'
 
 
-interface AppOptions {
+export interface AppOptions {
   el:  Map2DOptions['el']
   baseMap?: Map2DOptions['baseMap'],
   view?: Map2DOptions['view'],

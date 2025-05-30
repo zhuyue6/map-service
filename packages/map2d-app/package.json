@@ -1,6 +1,6 @@
 {
   "name": "@web-map-service/map2d-app",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "基于openlayer的2D地图应用",
   "scripts": {
     "start": "vite",
@@ -12,6 +12,8 @@
     "map-service",
     "map-app"
   ],
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.umd.js",
   "type": "module",
   "author": "zhuyue",
   "license": "ISC",
