@@ -29,15 +29,6 @@
         url: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map.jpg'
       }
     })
-  
-    const layer = map.container.layerManager.create({
-      type: 't'
-    })
-  
-    const element = layer.create({
-      type: 'polygon',
-      data: [[100, 100], [2000, 100], [2000, 2000], [100, 10000]]
-    })
   })
 </script>
 

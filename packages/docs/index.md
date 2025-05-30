@@ -1,5 +1,4 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
@@ -12,9 +11,9 @@ hero:
 
 features:
   - title: 我们期望
-    details: 你的组件稳定，文档详细
+    details: 组件稳定，文档详细
   - title: 你的期望
-    details: 开发快捷、使用方便
+    details: 开发快捷、使用方便、功能强大
   - title: 大家的期望
     details: no bug
 ---

@@ -63,6 +63,8 @@ const initToolsPluginsOptionsList: PluginOptions[] = [{
   type: 'modify'
 }, {
   type: 'edit'
+}, {
+  type: 'history'
 }]
 
 ```

@@ -1,17 +1,25 @@
 # 历史插件
-控制地图的回溯处理，让地图支持前进后退的功能
+控制地图的回溯处理，让应用元素操作支持前进后退的功能
+```ts
+  const { history } = tools
+  history.enable()
+```
 
-**元素插件事件**
+**事件**
 
 | 事件      |   参数    |  是否必填   |     描述    |
 | ---- | ---- | ---- | ---- |
-| enable |  ElementOptions  |  是  |  启用插件 |
-| close |  Element  |  是  |  禁用插件 |
-| forward |  Layer  |  是  |  前进 |
-| back |  Layer  |  是  |  后退 |
-| clean |  undefined  |  是  |  清空状态 |
+| enable |  undefined  |  否  |  启用插件 |
+| close |  undefined  |  否  |  禁用插件 |
+| forward |  undefined  |  否  |  前进 |
+| back |  undefined  |  否  |  后退 |
+| clean |  undefined  |  否  |  清空状态 |
 
-**元素反射事件**
+**反射**
+
+| 属性    |   参数    |    描述    |
+| ---- | ---- | ---- |
+| history | History   |  历史操作结束后的反射事件  |
 
 ```ts
   type History = {
@@ -26,7 +34,7 @@
   }
 
   app.emitter.on('history', (history: History) => {
-    console.log(elements)
+    console.log(history)
   })
 ```
 

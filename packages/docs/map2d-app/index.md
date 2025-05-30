@@ -3,15 +3,6 @@
 基础模块、元素插件、工具插件等功能。  
 地图应用与服务可能有一些重名的定义情况，如应用元素Element与服务元素SElement，这里命名前缀多一个S来代表使用的是服务定义相关
 
-## 地图架构
-
-![架构图](https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map-framework.png)
-
-## 元素寻址
-
-![架构图](https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/element-address.png)
-
-
 - 基础模块
   1. 底图  
      同地图服务container baseMap, 底图设置

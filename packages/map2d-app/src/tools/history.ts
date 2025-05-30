@@ -162,7 +162,7 @@ function makeTool(app: App) {
       app.emitter.on('element:added', addedEmitter);
       // 监听元素移除
       app.emitter.on('element:removed', removeEmitter);
-      // 监听元素上图
+      // 监听元素更改
       app.emitter.on('element:updateBefore', updateBeforeEmitter);
       tool.enabled = true;
     },

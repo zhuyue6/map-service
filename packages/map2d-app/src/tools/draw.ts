@@ -6,7 +6,7 @@ function makeTool(app: App) {
   const sDraw = createDrawInteractive(interactiveManager)
   // 默认使用的元素图层第一位的图层
   const layer = app.element.getLayers()?.[0]
-  let useLayerType = layer.type
+  let useLayerType = layer?.type
   
   function createElement(drawData: DrawEmit) {
     const element = app.element.create({
