@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite'
-import vuePlugin from '@vitejs/plugin-vue'
 import dts from 'vite-plugin-dts';
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'

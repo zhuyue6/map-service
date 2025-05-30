@@ -25,12 +25,15 @@
 
 地图应用
 ```js
+  npm i @web-map-service/map2d
   npm i @web-map-service/map2d-app
 ```
 
 ## 创建一个地图服务
 
 ```js
+  import '@web-map-service/map2d/style.css'
+  import { createApp } from '@web-map-service/map2d'
   const map = createMap({
     el: '#app',
     baseMap: {
@@ -53,6 +56,7 @@
 ## 创建一个地图应用
 
 ```js
+  import '@web-map-service/map2d/style.css'
   import { createApp } from '@web-map-service/map2d-app'
   
   const app = createApp({

@@ -24,6 +24,6 @@
     "./style.css": "./dist/index.css"
   },
   "peerDependencies": {
-    "@web-map-service/map2d": "^0.0.1"
+    "@web-map-service/map2d": "^0.1.0"
   }
 }

@@ -6,6 +6,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import tailwindcss from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
+import vuePlugin from '@vitejs/plugin-vue'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -45,7 +46,7 @@ export function getNpxByPlatform() {
 
 export function getViteConfig(app) {
   return {
-    configFile: app === 'core' ? false : path.resolve(__dirname, `../vite.config.ts`),
+    configFile: false,
     root: path.resolve(__dirname, `../packages/${app}`),
     css: {
       postcss: {
@@ -55,6 +56,9 @@ export function getViteConfig(app) {
         ]
       }
     },
+    plugins: [
+      vuePlugin()
+    ],
     server: {
       host: true,
       port: 8080,

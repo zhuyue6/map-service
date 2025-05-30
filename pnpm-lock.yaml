@@ -81,13 +81,23 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.16(typescript@5.8.3))
 
-  packages/core: {}
+  packages/core:
+    dependencies:
+      '@web-map-service/map2d':
+        specifier: ^0.1.0
+        version: 0.1.0
+      '@web-map-service/map2d-app':
+        specifier: ^0.1.0
+        version: 0.1.0(@web-map-service/map2d@0.1.0)
 
   packages/docs:
     dependencies:
-      autoprefixer:
-        specifier: ^10.4.21
-        version: 10.4.21(postcss@8.5.3)
+      '@web-map-service/map2d':
+        specifier: ^0.1.0
+        version: 0.1.0
+      '@web-map-service/map2d-app':
+        specifier: ^0.1.0
+        version: 0.1.0(@web-map-service/map2d@0.1.0)
       element-plus:
         specifier: ^2.9.9
         version: 2.9.11(vue@3.5.16(typescript@5.8.3))
@@ -95,6 +105,9 @@ importers:
         specifier: ^3.5.16
         version: 3.5.16(typescript@5.8.3)
     devDependencies:
+      autoprefixer:
+        specifier: ^10.4.21
+        version: 10.4.21(postcss@8.5.3)
       vitepress:
         specifier: ^1.5.0
         version: 1.6.3(@algolia/client-search@5.25.0)(async-validator@4.2.5)(postcss@8.5.3)(sass@1.79.0)(search-insights@2.17.3)(typescript@5.8.3)
@@ -106,10 +119,10 @@ importers:
         version: 10.5.0
 
   packages/map2d-app:
-    devDependencies:
+    dependencies:
       '@web-map-service/map2d':
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: ^0.1.0
+        version: 0.1.0
 
   packages/map3d:
     dependencies:
@@ -1036,8 +1049,13 @@ packages:
   '@vueuse/shared@9.13.0':
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
 
-  '@web-map-service/map2d@0.0.1':
-    resolution: {integrity: sha512-IUVE5d+XYWr5TVsY1fsK1AkNuKwbkyKKwwz4LoovUKpphbQJ9cNaHgOjRSLovHLkh50nw9LGTRsLwWuhjuOWcQ==}
+  '@web-map-service/map2d-app@0.1.0':
+    resolution: {integrity: sha512-9zhCca5XpOvEiTQm9dqP6ZWA/srPrpe4hGMu4dHW/66fhrVLfu9s15Ik9AGUqUrhu7FVba0VM2qJx1Ve+0rJ8Q==}
+    peerDependencies:
+      '@web-map-service/map2d': ^0.0.1
+
+  '@web-map-service/map2d@0.1.0':
+    resolution: {integrity: sha512-nfQc5+4ec/a9w5PjRgeowTnsbRQS2ZZxWb8Ztw1lWz1+DX6w2PB541klsKgj0HMR2wTd0dYrgnbP38JRHWQigw==}
 
   '@webgpu/types@0.1.60':
     resolution: {integrity: sha512-8B/tdfRFKdrnejqmvq95ogp8tf52oZ51p3f4QD5m5Paey/qlX4Rhhy5Y8tgFMi7Ms70HzcMMw3EQjH/jdhTwlA==}
@@ -3583,7 +3601,11 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@web-map-service/map2d@0.0.1':
+  '@web-map-service/map2d-app@0.1.0(@web-map-service/map2d@0.1.0)':
+    dependencies:
+      '@web-map-service/map2d': 0.1.0
+
+  '@web-map-service/map2d@0.1.0':
     dependencies:
       ol: 10.5.0
 

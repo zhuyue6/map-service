@@ -12,12 +12,12 @@ export default defineConfig({
     server: {
       host: '0.0.0.0'
     },
-    resolve: {
-      alias: [
-        { find: '@web-map-service/map2d', replacement: resolve(__filename, '../../../map2d/src') },
-        { find: '@web-map-service/map2d-app', replacement: resolve(__filename, '../../../map2d-app/src') }
-      ]
-    },
+    // resolve: {
+    //   alias: [
+    //     { find: '@web-map-service/map2d', replacement: resolve(__filename, '../../../map2d/src') },
+    //     { find: '@web-map-service/map2d-app', replacement: resolve(__filename, '../../../map2d-app/src') }
+    //   ]
+    // },
   },
   outDir: '../../docs',
   themeConfig: {

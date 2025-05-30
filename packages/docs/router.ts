@@ -13,6 +13,7 @@ const router: Router[] = [
   {
     text: '2D地图应用',
     items: [
+      { text: '安装', link: 'map2d-app/install' },
       { text: '介绍', link: 'map2d-app/index' },
       { text: '插件注册', link: 'map2d-app/pluginRegister' },
       { 
@@ -42,6 +43,7 @@ const router: Router[] = [
   {
     text: '2D地图服务',
     items: [
+      { text: '安装', link: 'map2d/install' },
       { text: '介绍', link: 'map2d/index' },
       { text: '地图', link: 'map2d/map' },
       { 
