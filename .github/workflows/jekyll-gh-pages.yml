@@ -1,0 +1,56 @@
+# Sample workflow for building and deploying a Jekyll site to GitHub Pages
+name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # 构建
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+       # 检出代码
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          
+      # 设置node环境
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+        
+      # 安装pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm@9
+
+      # 安装依赖
+      - name: install dependencies
+        run: pnpm install
+
+      # 开始构建
+      - name: Build
+        run: npm run docs:build
+
+  # 部署到GitHub Pages
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          publish_dir: ./docs
+          publish_branch: docs
+          force_orphan: true
