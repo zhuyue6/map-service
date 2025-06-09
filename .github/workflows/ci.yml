@@ -1,0 +1,67 @@
+# Sample workflow for building and deploying a Jekyll site to GitHub Pages
+name: Deploy docs
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+    paths:
+      - 'packages/docs/**'  # 只监听packages/docs目录下的变更
+
+jobs:
+  # 构建
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    
+       # 检出代码
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      # # 设置node环境
+      # - name: setup node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 18
+      #     cache: 'pnpm'
+        
+      # # 安装pnpm
+      # - name: Install pnpm
+      #   run: npm install -g pnpm
+
+      # 设置pnpm环境
+      - name: setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      # 安装依赖
+      - name: install dependencies
+        run: pnpm install
+
+      # 开始构建
+      - name: Build
+        run: pnpm run docs:build
+        
+      # 部署
+      - name: Deploy to docs branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs  # 构建输出目录
+          publish_branch: docs  # 推送到docs分支
+          force_orphan: true  # 创建无历史的新分支，保持干净
+
+  # 部署到GitHub Pages
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Deploy to GitHub Pages
+  #       uses: peaceiris/actions-gh-pages@v3
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         publish_dir: ./docs
+  #         publish_branch: docs
