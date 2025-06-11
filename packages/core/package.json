@@ -2,7 +2,7 @@
   "name": "web-map-service",
   "author": "zhuyue",
   "type": "module",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "openlayer map service/app，openlayer搭建的地图服务",
   "license": "ISC",
   "main": "./dist/index.umd.js",
