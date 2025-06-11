@@ -5,18 +5,14 @@ import { resolve } from 'path'
 
 const __filename = fileURLToPath(import.meta.url);
 
+console.log("__filename: ", __filename)
+
 export default defineConfig({
   title: "web-map-service文档",
   base: '/web-map-service',
   vite: {
     server: {
       host: '0.0.0.0'
-    },
-    resolve: {
-      alias: [
-        { find: '@web-map-service/map2d', replacement: resolve(__filename, '../../../map2d/src') },
-        { find: '@web-map-service/map2d-app', replacement: resolve(__filename, '../../../map2d-app/src') }
-      ]
     },
   },
   outDir: '../../docs',

@@ -9,6 +9,7 @@
     setZoom(zoom: number): void
     setMinZoom(zoom: number): void
     setMaxZoom(zoom: number): void
+    fit(extent: Extent): void
   }
   const { view } = map
 ```
@@ -23,6 +24,7 @@
 | setZoom   |  number  |     是      | 设置视窗缩放范围 |
 | setMinZoom   | number   |   是   | 设置视窗最小缩放 |
 | setMaxZoom   |  number  |     是      | 设置视窗最大缩放 |
+| fit   |  Extent  |     是      | 以该范围来边缘来适配地图 |
 
 ## 演示
 

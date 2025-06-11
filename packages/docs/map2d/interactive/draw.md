@@ -2,7 +2,7 @@
 提供绘制服务元素能力数据能力，通过改数据可以进行元素创建
 ```ts
   import { map2d } from 'web-map-service'
-  const { createDrawInteractive, createDrawInteractive } = map2d
+  const { createDrawInteractive } = map2d
 
   interface DrawInteractiveOptions {
     type: 'line' | 'circle' | 'polygon' | 'rect'
@@ -67,7 +67,7 @@
 </div>
 
 <script setup lang="ts">
-  import { createMap } from "@web-map-service/map2d";
+  import { createMap, createDrawInteractive } from "@web-map-service/map2d";
   import { ref, onMounted, reactive } from 'vue'
 
   const state = reactive({

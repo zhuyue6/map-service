@@ -27,7 +27,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@web-map-service/map2d": "^0.1.1",
-    "@web-map-service/map2d-app": "^0.1.1"
+    "@web-map-service/map2d": "^0.2.0",
+    "@web-map-service/map2d-app": "^0.2.0"
   }
 }

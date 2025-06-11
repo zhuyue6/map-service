@@ -45,9 +45,8 @@
 </div>
 
 <script setup lang="ts">
-  import { createMap, map2d } from "web-map-service";
+  import { createMap, createSelectInteractive, createMoveInteractive } from "@web-map-service/map2d";
   import { ref, onMounted, reactive } from 'vue'
-  const { createSelectInteractive, createMoveInteractive } = map2d
 
   const state = reactive({
     move: false,
