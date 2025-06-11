@@ -8,7 +8,7 @@
   move.enable()
   select.enable()
   // move 通常要配合select使用
-  map.emitter.on('select', (data: Element[])=>{
+  map.emitter.on('element:element', (data: Element[])=>{
     // 获取所有的选择元素
     for (const item of data) {
       move.add(item)
@@ -25,10 +25,10 @@
 
 | 属性    |   参数    |    描述    |
 | ---- | ---- | ---- |
-| move | Element[]   |  移动结束后的反射事件  |
+| element:move | Element[]   |  移动结束后的反射事件  |
 
 ```ts
-  map.emitter.on('move', (elements: Element[])=>{
+  map.emitter.on('element:move', (elements: Element[])=>{
     console.log(elements)
   })
 ```
@@ -102,7 +102,7 @@
     select = createSelectInteractive(interactiveManager)
     move = createMoveInteractive(interactiveManager)
     select.enable()
-    map.emitter.on('select', (data: Element[])=>{
+    map.emitter.on('element:select', (data: Element[])=>{
       // 获取所有的选择元素
       move.clean()
       for (const item of data) {

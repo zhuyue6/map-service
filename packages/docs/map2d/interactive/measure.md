@@ -1,5 +1,5 @@
 # measure
-measure 提供测绘能力，包括测面积和测距离，通过measure反射回调
+measure 提供测绘能力，包括测面积和测距离、角度，通过measure反射回调
 
 ```ts
   import { map2d } from 'web-map-service'
@@ -44,6 +44,7 @@ measure 提供测绘能力，包括测面积和测距离，通过measure反射�
       <el-select :modelValue="state.measureType" @change="changeMeasureType">
         <el-option value="distance" label="测距"></el-option>
         <el-option value="area" label="测面积"></el-option>
+        <el-option value="angle" label="角度"></el-option>
       </el-select>
       <el-button class="ml-2 mr-2"  @click="switcher('measure', !state.measure)" type="primary">{{ `${state.measure ? '关闭': '启用'} measure交互`}}</el-button>
     </div>
@@ -52,9 +53,8 @@ measure 提供测绘能力，包括测面积和测距离，通过measure反射�
 </div>
 
 <script setup lang="ts">
-  import { createMap, map2d } from "web-map-service";
+  import { createMap, createMeasureInteractive, createSelectInteractive, createModifyInteractive, createMoveInteractive, createDrawInteractive } from "@web-map-service/map2d";
   import { ref, onMounted, reactive } from 'vue'
-  const { createMeasureInteractive, createSelectInteractive, createModifyInteractive, createMoveInteractive, createDrawInteractive } = map2d
 
   const state = reactive({
     measure: false,

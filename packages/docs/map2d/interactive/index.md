@@ -90,9 +90,8 @@
 </div>
 
 <script setup lang="ts">
-  import { createMap, map2d } from "web-map-service";
+  import { createMap, createMeasureInteractive, createSelectInteractive, createModifyInteractive, createMoveInteractive, createDrawInteractive } from "@web-map-service/map2d";
   import { ref, onMounted, reactive } from 'vue'
-  const { createMeasureInteractive, createSelectInteractive, createModifyInteractive, createMoveInteractive, createDrawInteractive } = map2d
 
   const state = reactive({
     draw: false,
@@ -198,7 +197,7 @@
       data: [6000, 6000]
     })
 
-    map.emitter.on('select', (data: Element[])=>{
+    map.emitter.on('element:select', (data: Element[])=>{
       // 获取所有的选择元素
       move.clean()
       modify.clean()

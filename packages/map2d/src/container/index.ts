@@ -1,9 +1,9 @@
 import OlMap from 'ol/Map'
 import { Emitter } from '../events/emitter'
-import { createBaseMap, type BaseMap, type BaseMapOptions } from './baseMap'
+import { createBaseMap, type BaseMap, type BaseMapOptions, type Extent } from './baseMap'
 import { createLayerManager, type LayerManager, type Layer, type Element, type ElementType, type PointData, type CircleData, type ElementData } from './layerManager'
 
-export  { type BaseMap, type BaseMapOptions, type LayerManager, type Layer, type Element, type ElementType, type PointData, type CircleData, type ElementData }
+export  { type BaseMap, type BaseMapOptions, type Extent, type LayerManager, type Layer, type Element, type ElementType, type PointData, type CircleData, type ElementData }
 export  { getElementData } from './elements'
 export interface Container {
   baseMap: BaseMap

@@ -1,5 +1,5 @@
 # select
-提供地图服务元素能力
+提供地图服务元素能力, 按下ctrl 多选
 
 ```ts
   import { map2d } from 'web-map-service'
@@ -13,15 +13,19 @@
 | -----------  |  ----------|----------   | ----------- |
 | enable    |  undefined  |     否      |  启动交互 |
 | close    |  undefined  |     否      |  关闭交互 |
+| add    |  Element  |     否      |  添加元素为选中 |
+| remove    |  Element  |     否      |  移除元素为选中 |
+| clean    |  undefined  |     否      |  移除所有选中 |
+
 
 **反射**
 
 | 属性    |   参数    |    描述    |
 | ---- | ---- | ---- |
-| select | Element[]   |  选择结束后的反射事件  |
+| element:select | Element[]   |  选择结束后的反射事件  |
 
 ```ts
-  map.emitter.on('select', (elements: Element[])=>{
+  map.emitter.on('element:select', (elements: Element[])=>{
     console.log(elements)
   })
 ```
@@ -38,9 +42,8 @@
 </div>
 
 <script setup lang="ts">
-  import { createMap, map2d } from "web-map-service";
+  import { createMap, createSelectInteractive } from "@web-map-service/map2d";
   import { ref, onMounted, reactive } from 'vue'
-  const { createSelectInteractive} = map2d
 
   const state = reactive({
     select: false,
@@ -85,6 +88,7 @@
 
     interactiveManager = map.interactiveManager;
     select = createSelectInteractive(interactiveManager)
+    enable('select')
     const layer = map.container.layerManager.create()
     layer.create({
       type: 'circle',
@@ -93,14 +97,16 @@
         radius: 1000
       }
     })
-    map.emitter.on('select', (data: Element[])=>{
-      // 获取所有的选择元素
-      move.clean()
-      modify.clean()
-      for (const item of data) {
-        move.add(item)
-        modify.add(item)
+
+    layer.create({
+      type: 'circle',
+      data: {
+        center: [8000, 8000],
+        radius: 1000
       }
+    })
+    map.emitter.on('element:select', (data: Element[])=>{
+      // 获取所有的选择元素
     })
   })
 </script>

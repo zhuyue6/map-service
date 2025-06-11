@@ -4,10 +4,10 @@ import OlProjection from 'ol/proj/Projection'
 import OlImage from 'ol/layer/Image'
 import { Layer as OlLayer } from 'ol/layer'
 
-type Extent = [number, number, number, number]
+export type Extent = [number, number, number, number]
 const extent: Extent = [0, 0, 10000, 10000];
 const fullExtent: Extent = [-20026376.39, -20048966.10, 20026376.39, 20048966.10];
-const baseColor = '#ccc'
+const baseColor = '#fff'
 const baseBgColor = '#eee'
 
 export interface BaseMap {

@@ -10,7 +10,7 @@
   modify.enable()
   select.enable()
   // modify 通常要配合select使用
-  map.emitter.on('select', (data: Element[])=>{
+  map.emitter.on('element:select', (data: Element[])=>{
     // 获取所有的选择元素
     for (const item of data) {
       modify.add(item)
@@ -33,7 +33,7 @@
 | modify | Element[]   |  修改结束后的反射事件  |
 
 ```ts
-  map.emitter.on('modify', (elements: Element[])=>{
+  map.emitter.on('element:modify', (elements: Element[])=>{
     console.log(elements)
   })
 ```
@@ -50,9 +50,8 @@
 </div>
 
 <script setup lang="ts">
-  import { createMap, map2d } from "web-map-service";
+  import { createMap, createSelectInteractive, createModifyInteractive } from "@web-map-service/map2d";
   import { ref, onMounted, reactive } from 'vue'
-  const { createSelectInteractive, createModifyInteractive } = map2d
 
   const state = reactive({
     modify: false,
@@ -112,7 +111,7 @@
       data: [[3000, 3000], [4000, 3000], [4000, 4000], [3000, 4000]]
     })
 
-    map.emitter.on('select', (data: Element[])=>{
+    map.emitter.on('element:select', (data: Element[])=>{
       // 获取所有的选择元素
       modify.clean()
       for (const item of data) {

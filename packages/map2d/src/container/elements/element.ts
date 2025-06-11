@@ -50,7 +50,7 @@ export function createElement<T extends ElementType>(options: Omit<ElementPlugin
 
   element.setProps({
     elementId: id,
-    layerId: layerId
+    layerId
   })
 
   return element

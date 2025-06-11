@@ -1,4 +1,4 @@
-import { emitter } from '../events'
+import { emitter } from 'src/events'
 import { Interactive } from './types'
 import OlMap from 'ol/Map'
 import { Container } from '../container'

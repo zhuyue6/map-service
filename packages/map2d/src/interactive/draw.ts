@@ -4,8 +4,12 @@ import OlDraw, { createBox as OlCreateBox, type GeometryFunction } from 'ol/inte
 import { Interactive } from './types'
 import { getElementData, ElementData } from '../container/elements'
 import { getId, InteractiveManager } from './interactiveManager'
+import { getStyle } from '../style'
 
 export type DrawType = 'line' | 'circle' | 'polygon' | 'rect'
+
+const strokeColor = '#979797'
+const fillColor = '#F3F3F3'
 
 export interface DrawInteractiveOptions {
   type: DrawType
@@ -31,6 +35,7 @@ export interface Emit {
 
 export type DrawInteractive = Interactive<{
   use(type: DrawInteractiveOptions['type']): void
+  clean(): void
 }> 
 
 export function createInteractive(interactiveManager: InteractiveManager, options?: DrawInteractiveOptions) {
@@ -52,12 +57,33 @@ export function createInteractive(interactiveManager: InteractiveManager, option
     olDraw = new OlDraw({
       source: olSource,
       type: InteractiveType[type],
+      style: getStyle({
+        stroke: {
+          width: 2,
+          color: strokeColor
+        },
+        fill: {
+          color: fillColor
+        },
+        circle: {
+          radius: 4,
+          stroke: {
+            color: strokeColor,
+            width: 3
+          },
+          fill: {
+            color: '#fff'
+          }
+        }
+      }),
       geometryFunction
     })
     olDraw.on('drawend', (evt) => {
       const olGeometry = evt.feature.getGeometry()
       const drawData = getElementData(olGeometry!)
-      olSource.clear()
+      setTimeout(()=>{
+        olSource.clear()
+      })
       emitter.emit('draw', {
         type,
         data: drawData
@@ -90,9 +116,13 @@ export function createInteractive(interactiveManager: InteractiveManager, option
     },
     close() {
       if (!interactive.enabled) return 
+      interactive.clean()
       olMap.removeLayer(olLayer)
       olMap.removeInteraction(olDraw);
       interactive.enabled = false
+    },
+    clean() {
+      olSource.clear()
     },
     destroy() {
       interactive.close()

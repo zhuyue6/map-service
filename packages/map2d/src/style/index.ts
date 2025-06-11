@@ -1,29 +1,36 @@
 import OlFeature from 'ol/Feature'
 import * as OlStyle from "ol/style"
 
-export const strokeColor = 'rgba(0, 255, 0, 0.6)';
+export const strokeColor = '#44D7B6';
 export const strokeWidth = 1
-export const fillColor = 'rgba(255, 0, 0, 0.6)'
+export const fillColor = '#44D7B61A'
 export const imageWidth = 40
 export const imageHeight = 40
 
-export interface StorkeStyle {
+interface StorkeStyle {
   color: string,
   width: number
 }
 
-export interface FillStyle {
+interface FillStyle {
   color: string
 }
 
-export interface ImageStyle {
+interface ImageStyle {
   src: string
+}
+
+interface CircleStyle {
+  radius: number,
+  stroke: Partial<StorkeStyle>
+  fill: Partial<FillStyle>
 }
 
 export type Style = Partial<{
   stroke: Partial<StorkeStyle>
   fill: Partial<FillStyle>
   image: Partial<ImageStyle>
+  circle: Partial<CircleStyle>
 }>
 
 export function setStyle(olFeature: OlFeature, options?: Partial<Style>) {
@@ -37,6 +44,17 @@ function getStorke(options?: Partial<StorkeStyle>) {
     width: strokeWidth
   }
   const style = new OlStyle.Stroke({ ...defaultStyle, ...options })
+  return style
+}
+
+function getCircle(options?: Partial<CircleStyle>) {
+  if (!options) return
+  const mergeStyle = {
+    radius: options?.radius ?? 1,
+    stroke: getStorke(options?.stroke),
+    fill: getFill(options?.fill)
+  }
+  const style = new OlStyle.Circle(mergeStyle as any)
   return style
 }
 
@@ -65,7 +83,7 @@ function getFill(options?: Partial<StorkeStyle>) {
 export function getStyle(options?: Partial<Style>) {
   const olFill = getFill(options?.fill)
   const olStroke = getStorke(options?.stroke)
-  const olImage = getImage(options?.image)
+  const olImage = options?.circle ? getCircle(options?.circle) : getImage(options?.image)
   const style = new OlStyle.Style({
     fill: olFill,
     stroke: olStroke,

@@ -6,7 +6,6 @@ import { Element } from '../container/elements/element'
 import { Interactive } from './types'
 import { getId, InteractiveManager } from './interactiveManager'
 
-
 export type MoveInteractive = Interactive<{
   add(element: Element): void
   remove(element: Element): void
@@ -40,7 +39,7 @@ export function createInteractive(interactiveManager: InteractiveManager, useSyn
       })
     }
     
-    emitter.emit('move', list)
+    emitter.emit('element:move', list)
   });
 
   interactive = {

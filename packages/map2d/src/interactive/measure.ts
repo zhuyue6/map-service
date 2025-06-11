@@ -4,7 +4,6 @@ import { Vector as OlVectorLayer } from 'ol/layer';
 import OlFeature from 'ol/Feature';
 import { Polygon as OlPolygon, LineString as OlLineString } from 'ol/geom';
 import OlDraw from 'ol/interaction/Draw';
-import { Style, Fill, Stroke, Circle } from 'ol/style';
 import OlOverlay from 'ol/Overlay';
 import { getArea, getLength } from 'ol/sphere';
 import { unByKey } from 'ol/Observable';
@@ -12,6 +11,7 @@ import { EventsKey } from 'ol/events';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import { type InteractiveManager, getId } from './interactiveManager'
 import { Interactive } from './types';
+import { strokeColor, fillColor, getStyle } from '../style'
 
 function formatLength(line: OlLineString) {
   const data = getLength(line);
@@ -54,7 +54,7 @@ function createMeasure(olMap: OlMap, type: Measure['type']) {
     olOverlay: null,
   };
   tooltip.el = document.createElement('div');
-  tooltip.el.className = 'ol-tooltip ol-tooltip-measure';
+  tooltip.el.className = 'map2d-measure_tooltip';
   const measureTooltip = new OlOverlay({
     element: tooltip.el,
     offset: [0, -15],
@@ -92,11 +92,12 @@ function createHelpTooltip(olMap: OlMap) {
   return tooltip;
 }
 
-const continuePolygonMsg = 'Click to continue drawing the polygon';
-const continueLineMsg = 'Click to continue drawing the line';
+const continuePolygonMsg = '单击继续，双击结束';
+const continueLineMsg = '单击继续，双击结束';
 
 enum OlDrawType {
   distance = 'LineString',
+  angle = 'LineString',
   area = 'Polygon',
 }
 
@@ -108,7 +109,7 @@ interface ToolTip {
 
 interface Measure {
   id: number;
-  type: 'distance' | 'area';
+  type: 'distance' | 'area' | 'angle';
   data?: number;
   tooltip: ToolTip;
 }
@@ -118,25 +119,70 @@ export type MeasureInteractive = Interactive<{
   clean(): void;
 }>
 
+function getAngle(olLineString: OlLineString) {
+  const coords = olLineString.getCoordinates()
+  if (!coords || coords.length < 3) return 0
+  const [p1, p2, p3] = coords
+
+  // 计算第一条线的向量（基准线）
+  const v1x = p1[0] - p2[0];
+  const v1y = p1[1] - p2[1];
+  
+  // 计算第二条线的向量
+  const v2x = p3[0] - p2[0];
+  const v2y = p3[1] - p2[1];
+  
+  // 计算第一条线的角度（弧度，相对于正东方向）
+  const baseAngle = Math.atan2(v1y, v1x);
+  
+  // 计算第二条线的角度（弧度，相对于正东方向）
+  const targetAngle = Math.atan2(v2y, v2x);
+  
+  // 计算顺时针角度差（弧度）
+  let clockwiseDiff = (targetAngle - baseAngle) % (2 * Math.PI);
+  
+  // 确保角度差为正（顺时针方向）
+  if (clockwiseDiff < 0) {
+    clockwiseDiff += 2 * Math.PI;
+  }
+  
+  // 转换为度
+  let angleDegrees = clockwiseDiff * (180 / Math.PI);
+  
+  // 如果顺时针角度超过180度，则返回逆时针角度（即360度减去顺时针角度）
+  if (angleDegrees > 180) {
+    angleDegrees = 360 - angleDegrees;
+  }
+  
+  // 格式化角度
+  const formattedAngle = Number(angleDegrees.toFixed(2));
+  return formattedAngle
+}
+
+function formatAngle(olLineString: OlLineString) {
+  const data = getAngle(olLineString);
+  const output = data + '°';
+  return { output, data };
+}
+
 function getDrawStyle() {
-  return new Style({
-    fill: new Fill({
-      color: 'rgba(255, 255, 255, 0.2)',
-    }),
-    stroke: new Stroke({
-      color: 'rgba(0, 0, 0, 0.5)',
-      lineDash: [10, 10],
+  return getStyle({
+    stroke: {
       width: 2,
-    }),
-    image: new Circle({
+      color: strokeColor
+    },
+    fill: {
+      color: fillColor
+    },
+    circle: {
       radius: 5,
-      stroke: new Stroke({
-        color: 'rgba(0, 0, 0, 0.7)',
-      }),
-      fill: new Fill({
-        color: 'rgba(255, 255, 255, 0.2)',
-      }),
-    }),
+      stroke: {
+        color: strokeColor
+      },
+      fill: {
+        color: fillColor,
+      }
+    }
   })
 }
 
@@ -159,13 +205,21 @@ export function createInteractive(
   const olSource = new OlVectorSource();
   const olLayer = new OlVectorLayer({
     source: olSource,
-    style: {
-      'fill-color': 'rgba(255, 255, 255, 0.2)',
-      'stroke-color': '#ffcc33',
-      'stroke-width': 2,
-      'circle-radius': 7,
-      'circle-fill-color': '#ffcc33',
-    },
+    style: getStyle({
+      stroke: {
+        color: strokeColor,
+        width: 2
+      },
+      fill: {
+        color: fillColor
+      },
+      circle: {
+        radius: 7,
+        fill: {
+          color: fillColor
+        }
+      }
+    })
   });
 
   let type = options?.type ?? 'distance'
@@ -181,10 +235,10 @@ export function createInteractive(
     if (evt.dragging) {
       return;
     }
-    let helpMsg = 'Click to start drawing';
+    let helpMsg = '单击开始测量';
 
     if (sketch) {
-      if (type === 'distance') {
+      if (type === 'distance' || type === 'angle') {
         helpMsg = continueLineMsg;
       } else {
         helpMsg = continuePolygonMsg;
@@ -203,6 +257,7 @@ export function createInteractive(
       type: OlDrawType[type],
       style: getDrawStyle()
     });
+
     olDraw.on('drawstart', function (evt) {
       sketch = evt.feature;
       let tooltipCoord = evt.target.coordinate;
@@ -214,33 +269,58 @@ export function createInteractive(
         if (type === 'distance') {
           ({ output, data } = formatLength(geom));
           tooltipCoord = geom.getLastCoordinate();
+        } else if (type === 'angle') {
+          ({ output, data } = formatAngle(geom));
+          tooltipCoord = geom.getLastCoordinate();
         } else {
           ({ output, data } = formatArea(geom));
           tooltipCoord = geom.getInteriorPoint().getCoordinates();
         }
-  
+
+        console.log(geom.getCoordinates().length)
+
         measure!.data = data;
         measure!.tooltip.el!.innerHTML = output;
         measure!.tooltip.olOverlay!.setPosition(tooltipCoord);
       });
     });
   
-    olDraw.on('drawend', function () {
-      measure!.tooltip.el!.className = 'ol-tooltip ol-tooltip-static';
+    olDraw.on('drawend', () => {
+      measure!.tooltip.el!.className = 'map2d-measure_tooltip';
       measure!.tooltip.olOverlay!.setOffset([0, -7]);
       measures.push(measure!);
       sketch = null;
+      helpTooltip.el!.innerHTML = '单击开始测量';
       unByKey(listener);
       emitter.emit('measure', measure);
     });
   }
   createDraw()
 
+  const cssStyleSheet = document.styleSheets[document.styleSheets.length - 1]
+  cssStyleSheet.insertRule(`.map2d-measure_tooltip {
+      color: #fff;
+      border-radius: 4px;
+      padding: 2px 4px;
+      background-color: ${strokeColor};
+    }`, cssStyleSheet.cssRules.length - 1)
+
   let measure: Measure | null = null;
   // 所有测量的数字集合
   let measures: Measure[] = [];
   let listener: EventsKey;
   
+  function pointerAngleHandler() {
+    if (type === 'angle') {
+      const geom = sketch?.getGeometry()
+      if (!geom) return
+      const coords = (geom as OlLineString).getCoordinates()
+      if (coords.length >= 4) {
+        olDraw.finishDrawing()
+      }
+    }
+  }
+
   interactive = {
     id: getId(),
     type: 'measure',
@@ -252,6 +332,7 @@ export function createInteractive(
       olMap.addInteraction(olDraw);
       olMap.on('pointermove', pointerMoveHandler);
       interactive.enabled = true;
+      olMap.on('click', pointerAngleHandler);
     },
     use(measureType: Measure['type']) {
       interactive.clean()
@@ -280,6 +361,7 @@ export function createInteractive(
       olMap.removeLayer(olLayer);
       olMap.removeInteraction(olDraw);
       olMap.un('pointermove', pointerMoveHandler);
+      olMap.un('click', pointerAngleHandler);
       interactive.enabled = false;
     },
     destroy() {

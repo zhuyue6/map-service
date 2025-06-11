@@ -38,7 +38,7 @@ export function createInteractive(interactiveManager: InteractiveManager, useSyn
         syncOlFeatureElementData(item, container)
       })
     }
-    emitter.emit('modify', list)
+    emitter.emit('element:modify', list)
   });
 
   interactive = {

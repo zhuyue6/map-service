@@ -13,7 +13,7 @@ export interface Layer {
   name?: string
   create<T extends keyof ElementPluginsMap>(options: Omit<ElementPluginsMap[T]['options'], keyof ElementExtend> & {
     type: T
-  }): ReturnType<typeof createElement<T>>
+  }, useAdd?: boolean): ReturnType<typeof createElement<T>>
   add(element: Element): void
   remove(element: Element): void
   clean(): void
@@ -49,9 +49,9 @@ export function createLayer(emitter: Emitter, options?: LayerOptions): Layer {
     name: options?.name,
     create<T extends keyof ElementPluginsMap>(options: ElementPluginsMap[T]['options'] & {
       type: T
-    }) {
-      const element = createElement(options, id)
-      layer.add(element as Element)
+    }, useAdd=true) {
+      const element = createElement(options, layer.id)
+      useAdd && layer.add(element as Element)
       emitter.emit('element:created', element)
       return element
     },
