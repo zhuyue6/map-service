@@ -1,11 +1,12 @@
 import { App, Plugin } from '../types'
 import { Element } from '../elements/types'
-import { getElementBySElement, syncElementData } from '../elements'
+import { syncElementsDataEmit } from '../elements'
 import { Element as SElement, createMoveInteractive } from '@web-map-service/map2d'
 
 function makeTool(app: App) {
   const { interactiveManager, emitter } = app.map
   const sMove = createMoveInteractive(interactiveManager, false)
+  const { select } =  app.tools
 
   function moveElement(sElements: SElement[]) {
     if (!sElements) {
@@ -16,49 +17,52 @@ function makeTool(app: App) {
       return
     }
 
-    const elements: Element[] = []
+    const elements: Element[] = syncElementsDataEmit(app, sElements)
 
-    for (const sElement of sElements) {
-      const element = getElementBySElement(app, sElement)
-      if (!element) continue
-      syncElementData(element, sElement)
-      elements.push(element)
-    }
-
-    app.emitter.emit('move', elements)
+    app.emitter.emit('element:move', elements)
   }
 
-  const elmements: Element[] = []
+  app.emitter.on('element:select', (selectd: Element[]) => {
+    tool.clean()
+    for (const element of selectd) {
+      tool.add(element)
+    }
+  })
+
+  let elmements: Element[] = []
   const tool = {
     enabled: false,
     add(element: Element) {
+      if (!element) return
       const matcher = elmements.findIndex((item) => item.id === element.id)
       if (matcher !== -1) return
       sMove.add(element.getSElement())
       elmements.push(element)
     },
     remove(element: Element) {
-      sMove.remove(element.getSElement())
+      if (!element) return
       const matcher = elmements.findIndex((item) => item.id === element.id)
       if (matcher === -1) return
+      sMove.remove(element.getSElement())
       elmements.splice(matcher, 1)
     },
     clean() {
-      for(const element of elmements) {
-        tool.remove(element)
-      }
+      sMove.clean()
+      elmements = []
     },
     enable() {
       if (tool.enabled) return 
       tool.enabled = true
+      emitter.on('element:move', moveElement)
       sMove.enable()
-      emitter.on('move', moveElement)
+      select.enable()
     },
     close() {
       if (!tool.enabled) return 
       tool.enabled = false
-      emitter.remove('move', moveElement)
+      emitter.remove('element:move', moveElement)
       sMove.close()
+      select.close()
     }
   }
   return tool
@@ -80,5 +84,11 @@ export function createPlugin() {
 declare module './tool' {
   interface Tools {
     move: ReturnType<typeof makeTool>
+  }
+}
+
+declare module '../types' {
+  interface AppEmitterEvent {
+    'element:move': any
   }
 }

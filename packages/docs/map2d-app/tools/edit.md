@@ -16,10 +16,10 @@ edit是整合了select/move/modify 提供应用元素编辑的能力，通过edi
 
 | 属性    |   参数    |    描述    |
 | ---- | ---- | ---- |
-| edit | Element[]   |  编辑结束后的反射事件  |
+| element:edit | Element[]   |  编辑结束后的反射事件  |
 
 ```ts
-  app.emitter.on('edit', (elements: Element[])=>{
+  app.emitter.on('element:edit', (elements: Element[])=>{
     console.log(elements)
   })
 ```
@@ -37,7 +37,7 @@ edit是整合了select/move/modify 提供应用元素编辑的能力，通过edi
 
 <script setup>
   import { ref, onMounted, reactive } from 'vue'
-  import { createApp } from 'web-map-service'
+  import { createApp } from '@web-map-service/map2d-app'
 
   const state = reactive({
     edit: false,

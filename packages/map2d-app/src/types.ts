@@ -1,7 +1,10 @@
 import { type Map2D, type BaseMap, type View, events } from '@web-map-service/map2d'
 
+
+export interface AppEmitterEvent {}
+
 export interface App extends ComponentCustomProperties {
-  emitter: events.emitter.Emitter
+  emitter: events.emitter.Emitter<AppEmitterEvent>
   baseMap: BaseMap
   view: View
   plugins: Plugin[]

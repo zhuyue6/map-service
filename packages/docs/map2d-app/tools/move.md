@@ -1,10 +1,9 @@
 # move
 add方法提供移动应用元素的能力，通过move反射回调，通常是配合选择插件一起使用
 ```ts
-  const { move, select } = tools
+  const { move } = tools
   move.enable()
-  select.enable()
-  app.emitter.on('select', (elements: Element[])=>{
+  app.emitter.on('element:move', (elements: Element[])=>{
     move.clean()
     for (const element of elements) {
       move.add(element)
@@ -27,10 +26,10 @@ add方法提供移动应用元素的能力，通过move反射回调，通常是�
 
 | 属性    |   参数    |    描述    |
 | ---- | ---- | ---- |
-| move | Element[]   |  移动结束后的反射事件  |
+| element:move | Element[]   |  移动结束后的反射事件  |
 
 ```ts
-  app.emitter.on('move', (elements: Element[])=>{
+  app.emitter.on('element:move', (elements: Element[])=>{
     console.log(elements)
   })
 ```
@@ -48,7 +47,7 @@ add方法提供移动应用元素的能力，通过move反射回调，通常是�
 
 <script setup>
   import { ref, onMounted, reactive } from 'vue'
-  import { createApp } from 'web-map-service'
+  import { createApp } from '@web-map-service/map2d-app'
 
   const state = reactive({
     move: false,
@@ -90,18 +89,22 @@ add方法提供移动应用元素的能力，通过move反射回调，通常是�
       el: mapRef.value
     })
     move = app.tools.move
-    select = app.tools.select
-    select.enable()
-     app.emitter.on('select', (elements)=>{
-      move.clean()
-      for (const element of elements) {
-        move.add(element)
-      }
+
+    app.emitter.on('element:move', (elements)=>{
+      // console.log(elements)
     })
     app.element.create({
       type: 'ap',
       data: {
         center: [5000, 5000],
+        radius: 1000
+      }
+    })
+
+    app.element.create({
+      type: 'ap',
+      data: {
+        center: [7000, 7000],
         radius: 1000
       }
     })

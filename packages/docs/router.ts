@@ -36,6 +36,8 @@ const router: Router[] = [
           { text: '编辑插件', link: 'map2d-app/tools/edit' },
           { text: '测量插件', link: 'map2d-app/tools/measure' },
           { text: '历史插件', link: 'map2d-app/tools/history' },
+          { text: '缩放插件', link: 'map2d-app/tools/scale' },
+          { text: '排列插件', link: 'map2d-app/tools/rank' },
         ],
       },
     ],

@@ -2,21 +2,11 @@ import { App, Plugin } from '../types'
 import { Element } from '../elements/types'
 
 function makeTool(app: App) {
-  const select = app.tools.select
   const move = app.tools.move
   const modify = app.tools.modify
 
   function editElement(elements: Element[]) {
-    app.emitter.emit('edit', elements)
-  }
-
-  function selectElement(elements: Element[]) {
-    move.clean()
-    modify.clean()
-    for (const element of elements) {
-      move.add(element)
-      modify.add(element)
-    }
+    app.emitter.emit('element:edit', elements)
   }
 
   const tool = {
@@ -24,24 +14,20 @@ function makeTool(app: App) {
     enable() {
       if (tool.enabled) return 
       tool.enabled = true
-      select.enable()
       move.enable()
       modify.enable()
-      app.emitter.on('select', selectElement)
-      app.emitter.on('move', editElement)
-      app.emitter.on('modify', editElement)
+      app.emitter.on('element:move', editElement)
+      app.emitter.on('element:modify', editElement)
     },
     close() {
       if (!tool.enabled) return 
       tool.enabled = false
       move.clean()
       modify.clean()
-      select.close()
       move.close()
       modify.close()
-      app.emitter.on('select', selectElement)
-      app.emitter.remove('move', editElement)
-      app.emitter.remove('modify', editElement)
+      app.emitter.remove('element:move', editElement)
+      app.emitter.remove('element:modify', editElement)
     }
   }
   return tool
@@ -66,5 +52,11 @@ export function createPlugin() {
 declare module './tool' {
   interface Tools {
     edit: ReturnType<typeof makeTool>
+  }
+}
+
+declare module '../types' {
+  interface AppEmitterEvent {
+    'element:edit': any
   }
 }

@@ -43,3 +43,12 @@ export function deepCopy(target: any, hash = new WeakMap()) {
 
   return cloneTarget;
 }
+
+
+export function isDef<T>(data: T | undefined | null): data is T {
+  return data !== undefined && data !== null
+}
+  
+export function isUnDef(data: any): data is undefined | null {
+  return data === undefined || data === null
+}

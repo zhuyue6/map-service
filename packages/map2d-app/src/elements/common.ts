@@ -1,11 +1,15 @@
 import { App } from '../types'
-import type { Element, Layer, CreateElementOption } from './types'
-import { Layer as SLayer, Element as SElement, Style, ElementData, getElementData} from '@web-map-service/map2d'
+import type { Element, Layer, ElementOptions, CreateElementOption } from './types'
+import { Layer as SLayer, Element as SElement, Style, ElementData, getElementData, ElementType as SElementType} from '@web-map-service/map2d'
+import {ElementEmitter} from './element'
 
 let layerId = 0
 let elementId = 0
 interface LayerOptions {
+  type: string
+  name?: string
   createElement(app: App, sLayer: SLayer, options: CreateElementOption): Element
+  sElementType: SElementType[]
 }
 
 export function createLayerCommon(app: App, layerOptions: LayerOptions) {
@@ -15,8 +19,9 @@ export function createLayerCommon(app: App, layerOptions: LayerOptions) {
   const elements: Element[] = []
   const layer: Layer = {
     id: layerId,
-    type: 'ap',
-    sElementType: 'circle',
+    name: layerOptions.name,
+    type: layerOptions.type,
+    sElementType: layerOptions.sElementType,
     create(options) {
       const element = layerOptions.createElement(app, sLayer, options)
       return element
@@ -27,7 +32,7 @@ export function createLayerCommon(app: App, layerOptions: LayerOptions) {
       sLayer.add(element.getSElement())
       elements.push(element)
     },
-    remove(element) {
+    remove(element: Element) {
       const matcher = elements.findIndex((item) => item.id === element.id)
       if (matcher === -1) return 
       sLayer.remove(element.getSElement())
@@ -44,27 +49,32 @@ export function createLayerCommon(app: App, layerOptions: LayerOptions) {
   return layer
 }
 
-export function createElementCommon(app: App, sElement: SElement, options: CreateElementOption) {
+export function createElementCommon(app: App, sLayer: SLayer, options: ElementOptions) {
   elementId++
+  const sElement: SElement<SElementType> = sLayer.create({
+    type: options.sElementType!,
+    data: options.data,
+    rotate: options.rotate,
+    style: options.style
+  }, false)
+
   const element: Element = {
     id:  options.id ?? elementId,
-    type: 'ap',
+    type: options.type,
     name: options.name,
+    get props() {
+      return sElement.props
+    },
+    setProps(props: Record<string, unknown>) {
+      return sElement.setProps(props)
+    },
     setName(name: string) {
-      app.emitter.emit('element:updateBefore', {
-        element,
-        name
-      })
       sElement.setName(name)
     },
     get rotate() {
       return sElement.rotate
     },
     setRotate(rotate: number) {
-      app.emitter.emit('element:updateBefore', {
-        element,
-        rotate
-      })
       return sElement.setRotate(rotate)
     },
     getSElement() {
@@ -74,20 +84,12 @@ export function createElementCommon(app: App, sElement: SElement, options: Creat
       return sElement.style
     },
     setStyle(style: Style) {
-      app.emitter.emit('element:updateBefore', {
-        element,
-        style
-      })
       sElement.setStyle(style)
     },
     get data() {
       return sElement['data']
     },
     setData(data: ElementData) {
-      app.emitter.emit('element:updateBefore', {
-        element,
-        data
-      })
       sElement.setData(data)
     }
   }
@@ -96,13 +98,88 @@ export function createElementCommon(app: App, sElement: SElement, options: Creat
 }
 
 /**
- * 同步一下element数据主要是为了触发一下setData
+  通过app和服务元素来找到应用元素, 通过打标属性appLayerType、appElementId找到Element
  */
-export function syncElementData(element: Element, sElement: SElement) {
-  const olFeature = sElement.getOlFeature()
-  const olGeometry = olFeature.getGeometry()
-  if (olGeometry) { 
+  export function getElementBySElement(app: App, sElement: SElement) {
+    const layerType = sElement.props.appLayerType
+    const elementId =  sElement.props.appElementId
+    const layer = app.element.getLayerByType(layerType as string)
+    if (!layer) return
+    const element = layer.getElementById(elementId as number)
+    if (!element) return
+    return element
+  }
+
+/**
+ * SElement更新data通知同步一下element数据主要是为了触发一下update反射
+ */
+export function syncElementsDataEmit(app: App, sElements: SElement[]) {
+  const elements: Element[] = []
+  const elementSetDataItems: ElementSetDataItem[] = []
+  for (const sElement of sElements) {
+    const olFeature = sElement.getOlFeature()
+    const olGeometry = olFeature.getGeometry()
+    if (!olGeometry) continue
     const data = getElementData(olGeometry)
-    element.setData(data)
+    const element = getElementBySElement(app, sElement)
+    if(element && data) {
+      elements.push(element)
+      elementSetDataItems.push({
+        element,
+        data: {
+          data
+        }
+      })
+    }
+  }
+  
+  setElementsData(elementSetDataItems, app.emitter)
+  return elements
+}
+
+
+
+export interface ElementSetDataItem {
+  element: Element
+  data: Partial<{
+    data: Element['data']
+    style: Element['style']
+    rotate: Element['rotate']
+    name: Element['name']
+  }>
+}
+
+
+function setElementData(elementSetDataItem: ElementSetDataItem) {
+  const element = elementSetDataItem.element
+  const data = elementSetDataItem.data
+  if (data.data) {
+    element.setData(data.data)
+  }
+  if (data.name) {
+    element.setName(data.name)
+  }
+  if (data.rotate) {
+    element.setRotate(data.rotate)
+  }
+  if (data.style) {
+    element.setStyle(data.style)
+  }
+}
+
+
+/**
+ * 同步数据入口
+ * @param data 
+ * @param emitter 
+ */
+export function setElementsData(data: ElementSetDataItem[], emitter: App['emitter'], useSync=true) {
+  emitter.emit(ElementEmitter.update, data)
+
+  // 不进行数据同步，仅抛出回调事件
+  if (!useSync) return
+
+  for(const item of data) {
+    setElementData(item)
   }
 }

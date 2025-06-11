@@ -38,6 +38,7 @@
       <el-select :modelValue="state.measureType" @change="changeMeasureType">
         <el-option value="distance" label="测距"></el-option>
         <el-option value="area" label="测面积"></el-option>
+        <el-option value="angle" label="测角度"></el-option>
       </el-select>
       <el-button class="ml-2 mr-2"  @click="switcher('measure', !state.measure)" type="primary">{{ `${state.measure ? '关闭': '启用'} measure插件`}}</el-button>
     </div>
@@ -47,7 +48,7 @@
 
 <script setup>
   import { ref, onMounted, reactive } from 'vue'
-  import { createApp } from 'web-map-service'
+  import { createApp } from '@web-map-service/map2d-app'
 
   const state = reactive({
     measure: false,

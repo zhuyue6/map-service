@@ -1,6 +1,5 @@
 import { type App, type Plugin } from '../types'
-import { type Layer, type ElementPlugin, type ElementPluginExtend } from './types'
-import { Element as SElement } from '@web-map-service/map2d'
+import { type Layer, type ElementPlugin, type ElementPluginExtend, } from './types'
 
 // 元素id
 let id = 0
@@ -35,19 +34,29 @@ export function createPlugin() {
             appElementId: element.id
           })
 
-          emitter.emit('element:created', element)
+          emitter.emit(ElementEmitter.create, element)
           return element
         },
         add(element) {
-          const layer = elementPlugin.getLayerByType(element.type)
-          if (!layer) return
-          layer.add(element)
-          emitter.emit('element:added', element)
+          if (!element) return
+          const elements = Array.isArray(element) ? element : [element]
+          for (const item of elements) {
+            const layer = elementPlugin.getLayerByType(item.type)
+            if (!layer) return
+            layer.add(item)
+          }
+          emitter.emit(ElementEmitter.add, elements)
         },
         remove(element) {
-          const appLayer = elementPlugin.getLayerByType(element.type)
-          appLayer!.remove(element)
-          emitter.emit('element:removed', element)
+          if (!element) return
+          const elements = Array.isArray(element) ? element : [element]
+          for (const item of elements) {
+            const layer = elementPlugin.getLayerByType(item.type)
+            if (!layer) return
+            layer.remove(item)
+          }
+
+          emitter.emit(ElementEmitter.remove, elements)
         },
         getLayers() {
           return layers
@@ -76,21 +85,29 @@ export function createPlugin() {
   return plugin
 }
 
-/**
-  通过app和服务元素来找到应用元素, 通过打标属性appLayerType、appElementId找到Element
- */
-export function getElementBySElement(app: App, sElement: SElement) {
-  const layerType = sElement.props.appLayerType
-  const elementId =  sElement.props.appElementId
-  const layer = app.element.getLayerByType(layerType as string)
-  if (!layer) return
-  const element = layer.getElementById(elementId as number)
-  if (!element) return
-  return element
+interface ElementEvent {
+  "element:created": Element[]
+  "element:update": 'update'
+  "element:removed": Element[]
+  "element:added":  Element[]
+}
+
+export enum ElementEmitter {
+  create="element:created",
+  add="element:added",
+  update="element:update",
+  remove="element:removed"
 }
 
 declare module '../types' {
   interface ComponentCustomProperties {
     element: ElementPlugin;
   }
+ 
+  interface AppEmitterEvent extends ElementEvent {}
 }
+
+
+
+
+

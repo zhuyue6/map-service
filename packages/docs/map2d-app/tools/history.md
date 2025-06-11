@@ -11,7 +11,7 @@
 | ---- | ---- | ---- | ---- |
 | enable |  undefined  |  否  |  启用插件 |
 | close |  undefined  |  否  |  禁用插件 |
-| forward |  undefined  |  否  |  前进 |
+| next |  undefined  |  否  |  前进 |
 | back |  undefined  |  否  |  后退 |
 | clean |  undefined  |  否  |  清空状态 |
 
@@ -22,15 +22,27 @@
 | history | History   |  历史操作结束后的反射事件  |
 
 ```ts
+  interface ElementSetDataItem {
+    element: Element
+    data: Partial<{
+      data: Element['data']
+      style: Element['style']
+      rotate: Element['rotate']
+      name: Element['name']
+    }>
+  }
+
+  type StateItem = { 
+    element: Element
+    data?: ElementSetDataItem['data']
+    rawData?: ElementSetDataItem['data']
+  }
+
   type History = {
     max: number,
     pointer: number,
     type: 'add' | 'update' | 'remove'
-    element: Element,
-    data?: Element['data']
-    style?: Element['style']
-    name?: Element['name']
-    rotate?: Element['rotate']
+    data: StateItem[]
   }
 
   app.emitter.on('history', (history: History) => {
@@ -43,13 +55,19 @@
 图层在添加、删除、element时会触发回调、调用element更新方法会更新element回调，监听元素变化
 ```ts
   // 新增了元素element
-  emitter.on('element:added', element)
+  emitter.on('element:added', (element[]) => {
+
+  })
 
   // 删除了元素element
-  emitter.on('element:removed', element)
+  emitter.on('element:removed', (element[]) => {
+
+  })
 
   // 更新元素element数据前
-  emitter.on('element:updateBefore', { element, data, style, rotate, name })
+  emitter.on('element:update', (ElementSetDataItem[]) => {
+
+  })
 
 ```
 
@@ -77,7 +95,7 @@
 
 <script setup>
   import { ref, onMounted, reactive } from 'vue'
-  import { createApp } from 'web-map-service'
+  import { createApp } from '@web-map-service/map2d-app'
 
   let app 
 
@@ -106,7 +124,7 @@
 
   function historyHandle(type) {
     if (type === 'forward') {
-      history.forward()
+      history.next()
     } else if (type === 'back') {
       history.back()
     }

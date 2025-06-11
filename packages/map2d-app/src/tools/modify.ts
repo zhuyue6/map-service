@@ -1,12 +1,12 @@
 import { App, Plugin } from '../types'
 import { Element } from '../elements/types'
-import { getElementBySElement, syncElementData } from '../elements'
+import { syncElementsDataEmit } from '../elements'
 import { Element as SElement, createModifyInteractive } from '@web-map-service/map2d'
 
 function makeTool(app: App) {
   const { interactiveManager, emitter } = app.map
   const sModify = createModifyInteractive(interactiveManager, false)
-
+  const { select } =  app.tools
   function modifyElement(sElements: SElement[]) {
     if (!sElements) {
       return
@@ -16,19 +16,19 @@ function makeTool(app: App) {
       return
     }
 
-    const elements: Element[] = []
+    const elements: Element[] = syncElementsDataEmit(app, sElements)
 
-    for (const sElement of sElements) {
-      const element = getElementBySElement(app, sElement)
-      if (!element) continue
-      syncElementData(element, sElement)
-      elements.push(element)
-    }
-
-    app.emitter.emit('modify', elements)
+    app.emitter.emit('element:modify', elements)
   }
 
-  const elmements: Element[] = []
+  app.emitter.on('element:select', (selectd: Element[]) => {
+    tool.clean()
+    for (const element of selectd) {
+      tool.add(element)
+    }
+  })
+
+  let elmements: Element[] = []
   const tool = {
     enabled: false,
     add(element: Element) {
@@ -44,21 +44,22 @@ function makeTool(app: App) {
       elmements.splice(matcher, 1)
     },
     clean() {
-      for(const element of elmements) {
-        tool.remove(element)
-      }
+      sModify.clean()
+      elmements = []
     },
     enable() {
       if (tool.enabled) return 
       tool.enabled = true
+      emitter.on('element:modify', modifyElement)
       sModify.enable()
-      emitter.on('modify', modifyElement)
+      select.enable()
     },
     close() {
       if (!tool.enabled) return 
       tool.enabled = false
-      emitter.remove('modify', modifyElement)
+      emitter.remove('element:modify', modifyElement)
       sModify.close()
+      select.close()
     }
   }
   return tool
@@ -80,5 +81,12 @@ export function createPlugin() {
 declare module './tool' {
   interface Tools {
     modify: ReturnType<typeof makeTool>
+  }
+}
+
+
+declare module '../types' {
+  interface AppEmitterEvent {
+    'element:modify': any
   }
 }

@@ -3,7 +3,7 @@ import { type App, type Plugin, type PluginOptions } from './types'
 import { register, dependPluginRegister } from './setup/plugin'
 
 
-export interface AppOptions {
+interface AppOptions {
   el:  Map2DOptions['el']
   baseMap?: Map2DOptions['baseMap'],
   view?: Map2DOptions['view'],
@@ -19,7 +19,7 @@ export function createApp(options: AppOptions): App {
 
   const { container: { baseMap }, view } = map
   const plugins: Plugin[] = []
-  const emitter = events.emitter.createEmitter()
+  const emitter = events.emitter.createEmitter() as any
 
   const app: Partial<App> = {
     baseMap,

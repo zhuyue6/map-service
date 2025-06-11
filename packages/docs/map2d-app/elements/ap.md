@@ -25,7 +25,7 @@
 <div class="w-[500px] h-[500px] border-[1px] border-solid" ref="mapRef"></div>
 
 <script setup>
-  import { createApp, map2dApp } from 'web-map-service'
+  import { createApp, createApPlugin } from '@web-map-service/map2d-app'
   import { onMounted, ref, reactive } from 'vue'
 
   const app = ref()
@@ -65,7 +65,7 @@
         url: 'https://raw.githubusercontent.com/zhuyue6/web-map-service/main/public/images/map.jpg'
       },
     })
-    app.value.use(map2dApp.elements.createApPlugin())
+    app.value.use(createApPlugin())
   })
 
 </script>

@@ -1,7 +1,7 @@
 import { createMeasureInteractive } from '@web-map-service/map2d'
 import { App, Plugin } from '../types'
 
-type MeasureType = 'distance' | 'area'
+type MeasureType = 'distance' | 'area' | 'angle'
 
 function makeTool(app: App) {
   const { interactiveManager, emitter } = app.map
@@ -49,5 +49,12 @@ export function createPlugin() {
 declare module './tool' {
   interface Tools {
     measure: ReturnType<typeof makeTool>
+  }
+}
+
+
+declare module '../types' {
+  interface AppEmitterEvent {
+    measure: any
   }
 }

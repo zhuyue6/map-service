@@ -27,10 +27,10 @@ add方法提供修改应用元素的能力，通过modify反射回调，通常�
 
 | 属性    |   参数    |    描述    |
 | ---- | ---- | ---- |
-| modify | Element[]   |  修改结束后的反射事件  |
+| element:modify | Element[]   |  修改结束后的反射事件  |
 
 ```ts
-  app.emitter.on('modify', (elements: Element[])=>{
+  app.emitter.on('element:modify', (elements: Element[])=>{
     console.log(elements)
   })
 ```
@@ -48,7 +48,7 @@ add方法提供修改应用元素的能力，通过modify反射回调，通常�
 
 <script setup>
   import { ref, onMounted, reactive } from 'vue'
-  import { createApp } from 'web-map-service'
+  import { createApp } from '@web-map-service/map2d-app'
 
   const state = reactive({
     modify: false,
@@ -96,6 +96,13 @@ add方法提供修改应用元素的能力，通过modify反射回调，通常�
       modify.clean()
       for (const element of elements) {
         modify.add(element)
+      }
+    })
+    app.element.create({
+      type: 'ap',
+      data: {
+        center: [7000, 7000],
+        radius: 1000
       }
     })
     app.element.create({

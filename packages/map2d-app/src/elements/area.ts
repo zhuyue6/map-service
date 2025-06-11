@@ -1,15 +1,15 @@
-import type { Layer as SLayer, ElementType } from '@web-map-service/map2d'
+import type { Layer as SLayer } from '@web-map-service/map2d'
 import type {  App, Plugin } from '../types'
 import type {  Element, CreateElementOption } from './types'
 import { createLayerCommon, createElementCommon } from './common'
 
 const fillColor = '#f0fae6'
-const type = 'ap'
+const type = 'area'
 
+// 区域比较特别有多种形状包括矩形、多边形、圆形
 function createElement(app: App, sLayer: SLayer, options: CreateElementOption): Element {
-  const apOptions = {
+  const areaOptions = {
     type,
-    sElementType: 'circle' as ElementType,
     style: {
       fill: {
         color: fillColor
@@ -19,7 +19,7 @@ function createElement(app: App, sLayer: SLayer, options: CreateElementOption): 
   
   const element: Element = createElementCommon(app, sLayer, {
     ...options,
-    ...apOptions
+    ...areaOptions
   })
   return element
 }
@@ -33,7 +33,7 @@ export function createPlugin() {
       const layer = createLayerCommon(app, { 
         type,
         createElement,
-        sElementType: ['circle']
+        sElementType: ['rect', 'polygon', 'circle']
       })
       app.element.addLayer(layer)
       return app

@@ -7,24 +7,19 @@ function makeTool(app: App) {
   const { interactiveManager, emitter } = app.map
   const sSelect = createSelectInteractive(interactiveManager)
 
+  let elements: Element[] = []
+
   function selectElement(sElements: SElement[]) {
-    if (!sElements) {
-      return
-    }
+    const list = Array.isArray(sElements) ? sElements : []
+    elements = []
 
-    if (sElements.length === 0) {
-      return
-    }
-
-    const elements: Element[] = []
-
-    for (const sElement of sElements) {
+    for (const sElement of list) {
       const element = getElementBySElement(app, sElement)
       if (!element) continue
       elements.push(element)
     }
 
-    app.emitter.emit('select', elements)
+    app.emitter.emit('element:select', elements)
   }
 
   const tool = {
@@ -33,12 +28,25 @@ function makeTool(app: App) {
       if (tool.enabled) return 
       tool.enabled = true
       sSelect.enable()
-      emitter.on('select', selectElement)
+      emitter.on('element:select', selectElement)
+    },
+    add(element: Element){
+      sSelect.add(element.getSElement())
+    },
+    remove(element: Element) {
+      sSelect.remove(element.getSElement())
+    },
+    getSelected() {
+      return elements
+    },
+    clean() {
+      sSelect.clean()
     },
     close() {
       if (!tool.enabled) return 
       tool.enabled = false
-      emitter.remove('select', selectElement)
+      sSelect.clean()
+      emitter.remove('element:select', selectElement)
       sSelect.close()
     }
   }
@@ -61,5 +69,11 @@ export function createPlugin() {
 declare module './tool' {
   interface Tools {
     select: ReturnType<typeof makeTool>
+  }
+}
+
+declare module '../types' {
+  interface AppEmitterEvent {
+    'element:select': any
   }
 }
