@@ -2,7 +2,7 @@
   "name": "web-map-service",
   "author": "zhuyue",
   "packageManager": "pnpm@9.10.0",
-  "version": "0.1.1",
+  "version": "0.2.2",
   "type": "module",
   "description": "openlayer map service，openlayer搭建的地图服务",
   "license": "ISC",
