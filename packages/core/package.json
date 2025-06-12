@@ -2,7 +2,7 @@
   "name": "web-map-service",
   "author": "zhuyue",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "openlayer map service/app，openlayer搭建的地图服务",
   "license": "ISC",
   "main": "./dist/index.umd.js",
@@ -27,7 +27,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@web-map-service/map2d": "^0.2.0",
-    "@web-map-service/map2d-app": "^0.2.0"
+    "@web-map-service/map2d": "^0.2.1",
+    "@web-map-service/map2d-app": "^0.2.1"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@web-map-service/map2d-app",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "基于openlayer的2D地图应用",
   "scripts": {
     "start": "vite",
@@ -26,6 +26,6 @@
     "./style.css": "./dist/index.css"
   },
   "peerDependencies": {
-    "@web-map-service/map2d": "^0.1.0"
+    "@web-map-service/map2d": "^0.2.1"
   }
 }

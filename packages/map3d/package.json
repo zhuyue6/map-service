@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "author": "zhuyue",
+  "private": true,
   "license": "ISC",
   "exports": {
     ".": {

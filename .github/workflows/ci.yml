@@ -7,6 +7,7 @@ on:
     branches: ["main"]
     paths:
       - 'packages/docs/**'  # 只监听packages/docs目录下的变更
+  workflow_dispatch:
 
 jobs:
   # 构建
@@ -39,7 +40,7 @@ jobs:
 
       # 安装依赖
       - name: install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       # 开始构建
       - name: Build
