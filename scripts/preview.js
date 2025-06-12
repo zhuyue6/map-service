@@ -1,6 +1,5 @@
 import { preview } from 'vite'
 import process from 'node:process'
-import path from 'node:path'
 
 async function main() {
   const server = await preview({

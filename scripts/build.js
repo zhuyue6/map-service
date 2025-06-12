@@ -1,10 +1,8 @@
-import { selectApp, getArgv, getViteConfig } from './common.js'
+import { selectApp, getArgv, getViteConfig, getDirname } from './common.js'
 import dts from 'vite-plugin-dts';
 import { build } from 'vite'
-import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 async function main() {
   const argv = getArgv()
@@ -13,6 +11,7 @@ async function main() {
 }
 
 async function buildApp(app) {
+  const __dirname = getDirname()
   await build({
     ...getViteConfig(app),
     plugins: [

@@ -49,3 +49,10 @@ declare module './tool' {
     event: ReturnType<typeof makeTool>;
   }
 }
+
+declare module '../types' {
+  interface AppEmitterEvent {
+    click: any
+    move: any
+  }
+}

@@ -87,20 +87,20 @@ importers:
   packages/core:
     dependencies:
       '@web-map-service/map2d':
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.2.2
+        version: 0.2.2
       '@web-map-service/map2d-app':
-        specifier: ^0.2.1
-        version: 0.2.1(@web-map-service/map2d@0.2.1)
+        specifier: ^0.2.2
+        version: 0.2.2(@web-map-service/map2d@0.2.2)(ol@10.5.0)
 
   packages/docs:
     dependencies:
       '@web-map-service/map2d':
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.2.2
+        version: 0.2.2
       '@web-map-service/map2d-app':
-        specifier: ^0.2.1
-        version: 0.2.1(@web-map-service/map2d@0.2.1)
+        specifier: ^0.2.2
+        version: 0.2.2(@web-map-service/map2d@0.2.2)(ol@10.5.0)
       element-plus:
         specifier: ^2.9.11
         version: 2.9.11(vue@3.5.16(typescript@5.8.3))
@@ -108,8 +108,8 @@ importers:
         specifier: ^3.5.16
         version: 3.5.16(typescript@5.8.3)
       web-map-service:
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.2.2
+        version: 0.2.2(ol@10.5.0)
     devDependencies:
       autoprefixer:
         specifier: ^10.4.21
@@ -127,8 +127,12 @@ importers:
   packages/map2d-app:
     dependencies:
       '@web-map-service/map2d':
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.2.2
+        version: 0.2.2
+    devDependencies:
+      ol:
+        specifier: ^10.5.0
+        version: 10.5.0
 
   packages/map3d:
     dependencies:
@@ -1229,13 +1233,14 @@ packages:
   '@vueuse/shared@9.13.0':
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
 
-  '@web-map-service/map2d-app@0.2.1':
-    resolution: {integrity: sha512-Uz++/cxmle2cVN2PTr4+F4EVP2KVlvTv5x/zT/2BMjpim/OUJMvjiCumPagG+4Ty8ez38wVYhLPbTHUzvqVDkA==}
+  '@web-map-service/map2d-app@0.2.2':
+    resolution: {integrity: sha512-RLj38iYTs7bkTK/HFQwZGaMggzgOyzK44Y0pMA7BccE1VVN+VUp10+XdKBVybS8WNBMC8cfKZ/i0ckd9fZm71A==}
     peerDependencies:
-      '@web-map-service/map2d': ^0.2.1
+      '@web-map-service/map2d': ^0.2.2
+      ol: ^10.5.0
 
-  '@web-map-service/map2d@0.2.1':
-    resolution: {integrity: sha512-/BXRyW1zpuSg852M2nyL8Q5ufs4nwUIjf4eUa22Z4MBaOi/oILmY0clfENfjcAe4w7ch8mp41beJTw66na/6lQ==}
+  '@web-map-service/map2d@0.2.2':
+    resolution: {integrity: sha512-j5Ev9WB3PbpBtjOCrAnt/YSsmjhe4pkxol6QLXBqJ+ahF2IgMHi4rDisuAjKXYn7uv94fbLFE9pJO19CTN7m/Q==}
 
   '@webgpu/types@0.1.60':
     resolution: {integrity: sha512-8B/tdfRFKdrnejqmvq95ogp8tf52oZ51p3f4QD5m5Paey/qlX4Rhhy5Y8tgFMi7Ms70HzcMMw3EQjH/jdhTwlA==}
@@ -3001,8 +3006,8 @@ packages:
   wcwidth@1.0.1:
     resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
 
-  web-map-service@0.2.1:
-    resolution: {integrity: sha512-IlJTvx1Nd3h2LQH2UgjZU/2ctrNQPxWMrZaUQotky6TnlLRO3PwUwilJSozsT5njthhWZlT87KBefu2BQG7L2g==}
+  web-map-service@0.2.2:
+    resolution: {integrity: sha512-3XrzkhWuGjlXZQ/fCaib/PozdmVh1N5M9z+w9Y9IvlVwzx9twd0sXb8h5LOeptP5q5fRFnGyEY7T0RELJ5dFGQ==}
     engines: {node: '>=18'}
 
   web-worker@1.5.0:
@@ -4154,11 +4159,12 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@web-map-service/map2d-app@0.2.1(@web-map-service/map2d@0.2.1)':
+  '@web-map-service/map2d-app@0.2.2(@web-map-service/map2d@0.2.2)(ol@10.5.0)':
     dependencies:
-      '@web-map-service/map2d': 0.2.1
+      '@web-map-service/map2d': 0.2.2
+      ol: 10.5.0
 
-  '@web-map-service/map2d@0.2.1':
+  '@web-map-service/map2d@0.2.2':
     dependencies:
       ol: 10.5.0
 
@@ -6034,10 +6040,12 @@ snapshots:
     dependencies:
       defaults: 1.0.4
 
-  web-map-service@0.2.1:
+  web-map-service@0.2.2(ol@10.5.0):
     dependencies:
-      '@web-map-service/map2d': 0.2.1
-      '@web-map-service/map2d-app': 0.2.1(@web-map-service/map2d@0.2.1)
+      '@web-map-service/map2d': 0.2.2
+      '@web-map-service/map2d-app': 0.2.2(@web-map-service/map2d@0.2.2)(ol@10.5.0)
+    transitivePeerDependencies:
+      - ol
 
   web-worker@1.5.0: {}
 

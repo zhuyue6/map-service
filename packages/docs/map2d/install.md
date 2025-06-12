@@ -8,7 +8,7 @@
 
 ```js
   import 'web-map-service/style.css'
-  import { createMap } from 'web-map-service'
+  import { createMap } from '@web-map-service/map2d'
   const map = createMap({
     el: 'app'
   })

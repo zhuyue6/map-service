@@ -8,18 +8,20 @@ import tailwindcss from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
 import vuePlugin from '@vitejs/plugin-vue'
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url))
-
 inquirer.registerPrompt('search-list', inquirerSearchList);
 
 export function getApps() {
   const packageDirs = readdirSync('packages');
-  
   return packageDirs.filter((app) => !['docs'].includes(app));
 }
 
 export function getArgv() {
   return process.argv[2];
+}
+
+export function getDirname() {
+  const __dirname = fileURLToPath(new URL('.', import.meta.url))
+  return __dirname
 }
 
 export async function selectApp() {
@@ -45,6 +47,7 @@ export function getNpxByPlatform() {
 }
 
 export function getViteConfig(app) {
+  const __dirname = getDirname()
   return {
     configFile: false,
     root: path.resolve(__dirname, `../packages/${app}`),

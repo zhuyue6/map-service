@@ -12,7 +12,7 @@
     "build": "node scripts/build.js",
     "preview": "node scripts/preview.js",
     "publish": "node scripts/publish.js",
-    "map2d": "pnpm --filter=@web-map-service/map2d start",
+    "publish:map2d-app": "node scripts/publish.js map2d-app",
     "docs": "pnpm --filter=@web-map-service/docs start",
     "docs:build": "pnpm --filter=@web-map-service/docs build",
     "lint-staged": "lint-staged --quiet"

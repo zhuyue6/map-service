@@ -7,20 +7,20 @@ export const fillColor = '#44D7B61A'
 export const imageWidth = 40
 export const imageHeight = 40
 
-interface StorkeStyle {
+export interface StorkeStyle {
   color: string,
   width: number
 }
 
-interface FillStyle {
+export interface FillStyle {
   color: string
 }
 
-interface ImageStyle {
+export interface ImageStyle {
   src: string
 }
 
-interface CircleStyle {
+export interface CircleStyle {
   radius: number,
   stroke: Partial<StorkeStyle>
   fill: Partial<FillStyle>
