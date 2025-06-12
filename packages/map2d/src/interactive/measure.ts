@@ -12,6 +12,7 @@ import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import { type InteractiveManager, getId } from './interactiveManager'
 import { Interactive } from './types';
 import { strokeColor, fillColor, getStyle } from '../style'
+import { util } from '../shared'
 
 function formatLength(line: OlLineString) {
   const data = getLength(line);
@@ -297,13 +298,12 @@ export function createInteractive(
   }
   createDraw()
 
-  const cssStyleSheet = document.styleSheets[document.styleSheets.length - 1]
-  cssStyleSheet.insertRule(`.map2d-measure_tooltip {
+  util.safeInsertCssRule(`.map2d-measure_tooltip {
       color: #fff;
       border-radius: 4px;
       padding: 2px 4px;
       background-color: ${strokeColor};
-    }`, cssStyleSheet.cssRules.length - 1)
+    }`)
 
   let measure: Measure | null = null;
   // 所有测量的数字集合

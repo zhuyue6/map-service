@@ -12,9 +12,9 @@ import { getElementOlStyle } from '../container/elements/common'
 import OlVectorSource from 'ol/source/Vector'
 import { platformModifierKeyOnly } from 'ol/events/condition';
 import { strokeColor, fillColor } from '../style'
+import { util } from '../shared'
 
 const strokeWidth = 2
-
 export type Emit = Element[]
 
 export type SelectInteractive = Interactive<{
@@ -56,11 +56,10 @@ export function createInteractive(interactiveManager: InteractiveManager): Selec
     className: 'map2d-select_olDragBox',
   })
 
-  const cssStyleSheet = document.styleSheets[document.styleSheets.length - 1]
-  cssStyleSheet.insertRule(`.map2d-select_olDragBox {
-      border: 2px solid ${strokeColor};
-      background-color: ${fillColor};
-    }`, cssStyleSheet.cssRules.length - 1)
+  util.safeInsertCssRule(`.map2d-select_olDragBox {
+    border: 2px solid ${strokeColor};
+    background-color: ${fillColor};
+  }`)
 
   olSelect.on('select', function (e) {
     const featureList: OlFeature[] = e.target.getFeatures().getArray() ?? []

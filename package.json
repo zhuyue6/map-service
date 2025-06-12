@@ -10,6 +10,7 @@
     "prepare": "husky install",
     "start": "node scripts/dev.js",
     "build": "node scripts/build.js",
+    "preview": "node scripts/preview.js",
     "map2d": "pnpm --filter=@web-map-service/map2d start",
     "docs": "pnpm --filter=@web-map-service/docs start",
     "docs:build": "pnpm --filter=@web-map-service/docs build",
